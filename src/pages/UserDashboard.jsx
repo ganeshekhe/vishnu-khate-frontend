@@ -1,13 +1,16 @@
 
 
-
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useUser } from "../context/UserContext";
+// import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 import { Check, FileText, Download, AlertCircle } from "lucide-react";
+import { saveAs } from "file-saver";
+import { io } from "socket.io-client"; // 👈 added
 
 const UserDashboard = () => {
-  const { user } = useUser();
+  // const { user } = useUser();
+    const { user } = useAuth();
   const [applications, setApplications] = useState([]);
   const [corrections, setCorrections] = useState({});
   const [loading, setLoading] = useState(false);
@@ -17,6 +20,19 @@ const UserDashboard = () => {
   useEffect(() => {
     if (user?.token) {
       fetchApps();
+
+      // 👇 socket setup
+      const socket = io("http://localhost:5000"); // 🔁 your backend URL
+
+      // Refresh apps on any update
+      socket.on("applicationStatusUpdated", fetchApps);
+      socket.on("newApplication", fetchApps);
+      socket.on("certificateUploaded", fetchApps);
+
+      // Cleanup
+      return () => {
+        socket.disconnect();
+      };
     }
   }, [user]);
 
@@ -26,7 +42,7 @@ const UserDashboard = () => {
       const res = await axios.get("http://localhost:5000/api/applications/user", {
         headers: { Authorization: `Bearer ${user.token}` },
       });
-      setApplications(res.data.reverse()); // 👈 Reversing inline
+      setApplications(res.data.reverse());
     } catch (err) {
       console.error("Failed to fetch user applications:", err);
     } finally {
@@ -74,9 +90,21 @@ const UserDashboard = () => {
     }
   };
 
+  const downloadCertificate = async (filename, appId) => {
+    try {
+      const res = await axios.get(`${FILE_URL}${filename}`, {
+        responseType: "blob",
+      });
+      saveAs(res.data, `certificate-${appId}.pdf`);
+    } catch (err) {
+      console.error("Certificate download error:", err);
+      alert("Failed to download certificate.");
+    }
+  };
+
   return (
-    <div className="max-w-7xl mx-auto p-25">
-      <h2 className="text-3xl font-bold mb-8 text-indigo-800 tracking-tight">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <h2 className="text-2xl sm:text-3xl font-semibold text-indigo-800 mb-8">
         📋 Your Applications
       </h2>
 
@@ -85,24 +113,24 @@ const UserDashboard = () => {
       ) : applications.length === 0 ? (
         <p className="text-gray-600">No applications found.</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
-          <table className="min-w-full bg-white text-sm">
-            <thead className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
+        <div className="overflow-x-auto bg-white rounded-lg shadow-md border border-gray-200">
+          <table className="min-w-full text-sm divide-y divide-gray-200">
+            <thead className="bg-indigo-600 text-white text-left">
               <tr>
-                <th className="p-3 text-left">Service</th>
-                <th className="p-3 text-left">Status</th>
-                <th className="p-3 text-left">Filled PDF</th>
-                <th className="p-3 text-left">Certificate</th>
+                <th className="px-4 py-3">Service</th>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Dummy Form</th>
+                <th className="px-4 py-3">Certificate</th>
+                <th className="px-4 py-3">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {applications.map((app) => (
-                <tr key={app._id} className="border-t hover:bg-gray-50">
-                  <td className="p-3">{app.service?.name || "N/A"}</td>
-
-                  <td className="p-3">
+                <tr key={app._id} className="hover:bg-gray-50">
+                  <td className="px-4 py-3">{app.service?.name || "N/A"}</td>
+                  <td className="px-4 py-3">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold shadow border inline-flex items-center gap-1 ${
+                      className={`px-3 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1 border ${
                         app.status === "Rejected"
                           ? "bg-red-100 text-red-700 border-red-300"
                           : app.status === "Pending Confirmation"
@@ -122,15 +150,13 @@ const UserDashboard = () => {
                     )}
                   </td>
 
-                  
-
-                  <td className="p-3">
+                  <td className="px-4 py-3">
                     {app.formPdf?.filename ? (
                       <a
                         href={`${FILE_URL}${app.formPdf.filename}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                        className="text-blue-600 hover:underline flex items-center gap-1"
                       >
                         <FileText size={14} /> View PDF
                       </a>
@@ -139,27 +165,25 @@ const UserDashboard = () => {
                     )}
                   </td>
 
-                  <td className="p-3">
+                  <td className="px-4 py-3">
                     {app.status === "Completed" && app.certificate?.filename ? (
-                      <a
-                        href={`${FILE_URL}${app.certificate.filename}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 hover:text-green-800 flex items-center gap-1"
+                      <button
+                        onClick={() => downloadCertificate(app.certificate.filename, app._id)}
+                        className="text-green-600 hover:underline flex items-center gap-1"
                       >
                         <Download size={14} /> Download
-                      </a>
+                      </button>
                     ) : (
                       <span className="text-gray-400">Not available</span>
                     )}
                   </td>
 
-                  <td className="p-3 space-y-2">
+                  <td className="px-4 py-3 space-y-2">
                     {app.status === "Pending Confirmation" && (
                       <>
                         <button
                           onClick={() => handleConfirm(app._id)}
-                          className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 flex items-center justify-center gap-2 w-full transition"
+                          className="w-full bg-green-600 hover:bg-green-700 text-white py-1.5 rounded-md flex items-center justify-center gap-2 transition"
                         >
                           <Check size={16} /> Confirm
                         </button>
@@ -169,11 +193,11 @@ const UserDashboard = () => {
                           placeholder="Write correction comment..."
                           value={corrections[app._id] || ""}
                           onChange={(e) => handleCorrectionChange(app._id, e.target.value)}
-                          className="w-full border px-2 py-1 text-xs rounded mt-2"
+                          className="w-full border border-gray-300 px-2 py-1 text-xs rounded-md"
                         />
                         <button
                           onClick={() => submitCorrection(app._id)}
-                          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 flex items-center justify-center gap-2 w-full transition"
+                          className="w-full bg-red-600 hover:bg-red-700 text-white py-1.5 rounded-md flex items-center justify-center gap-2 transition"
                         >
                           <AlertCircle size={16} /> Send Correction
                         </button>
@@ -181,7 +205,7 @@ const UserDashboard = () => {
                     )}
 
                     {app.status === "Rejected" && app.rejectReason && (
-                      <div className="mt-2 text-xs text-red-600">
+                      <div className="text-xs text-red-600 mt-2">
                         <b>Rejected:</b> {app.rejectReason}
                       </div>
                     )}

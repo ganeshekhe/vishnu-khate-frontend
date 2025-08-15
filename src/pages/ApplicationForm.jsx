@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useUser } from "../context/UserContext";
+// import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 
 const ApplicationForm = () => {
   const { serviceId } = useParams();
-  const { user } = useUser();
+  // const { user } = useUser();
+   const { user } = useAuth();
   const navigate = useNavigate();
 
   const [services, setServices] = useState([]);

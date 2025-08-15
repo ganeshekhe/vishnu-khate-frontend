@@ -8,13 +8,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
-import AdminServices from "./pages/AdminServices";
+
 import ApplicationForm from "./pages/ApplicationForm";
 import OperatorPanel from "./pages/OperatorPanel";
 import UserDashboard from "./pages/UserDashboard";
 
 import { AuthProvider } from "./context/AuthContext";
-import { UserProvider } from "./context/UserContext";
+// import { UserProvider } from "./context/UserContext";
 
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -25,7 +25,7 @@ import UserProfile from './pages/UserProfile'; // ✅ UserProfile import
 function App() {
   return (
     <AuthProvider>
-      <UserProvider>
+      {/* <UserProvider> */}
         
        
  
@@ -49,14 +49,14 @@ function App() {
 
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/services" element={<AdminServices />} />
+            
 
             {/* Operator Route */}
             <Route path="/operator" element={<OperatorPanel />} />
           </Routes>
         </Router>
      
-      </UserProvider>
+      {/* </UserProvider> */}
     </AuthProvider>
   );
 }

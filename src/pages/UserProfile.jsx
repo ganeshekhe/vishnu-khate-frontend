@@ -1,14 +1,13 @@
 
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useUser } from "../context/UserContext";
-
+// import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
 
 const UserProfile = () => {
-  const { user } = useUser();
+  // const { user } = useUser();
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     gender: "",
@@ -227,10 +226,7 @@ const UserProfile = () => {
                 <div className="mt-1 flex flex-col md:flex-row md:items-center md:justify-between text-sm bg-white p-2 rounded shadow">
                   <span className="text-gray-600 mb-1 md:mb-0">📌 {uploadedDocs[field].filename}</span>
                   <div className="flex items-center space-x-4">
-                    <a href={`${BASE_URL}/api/files/${uploadedDocs[field].filename}`} target="_blank">
-  View
-</a>
-
+                    <a href={`${BASE_URL}/api/files/${uploadedDocs[field].filename}`} target="_blank" rel="noreferrer">View</a>
                     <button
                       type="button"
                       onClick={() => handleDeleteDoc(field)}
