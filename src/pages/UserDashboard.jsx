@@ -1,28 +1,27 @@
-
-
+// src/pages/UserDashboard.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
-// import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
 import { Check, FileText, Download, AlertCircle } from "lucide-react";
 import { saveAs } from "file-saver";
-import { io } from "socket.io-client"; // 👈 added
+import { io } from "socket.io-client";
+
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const UserDashboard = () => {
-  // const { user } = useUser();
-    const { user } = useAuth();
+  const { user } = useAuth();
   const [applications, setApplications] = useState([]);
   const [corrections, setCorrections] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const FILE_URL = "http://localhost:5000/api/files/";
+  const FILE_URL = `${BASE_URL}/api/files/`;
 
   useEffect(() => {
     if (user?.token) {
       fetchApps();
 
-      // 👇 socket setup
-      const socket = io("http://localhost:5000"); // 🔁 your backend URL
+      // 👇 socket setup with backend URL
+      const socket = io(BASE_URL);
 
       // Refresh apps on any update
       socket.on("applicationStatusUpdated", fetchApps);
@@ -39,7 +38,7 @@ const UserDashboard = () => {
   const fetchApps = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/applications/user", {
+      const res = await axios.get(`${BASE_URL}/api/applications/user`, {
         headers: { Authorization: `Bearer ${user.token}` },
       });
       setApplications(res.data.reverse());
@@ -53,7 +52,7 @@ const UserDashboard = () => {
   const handleConfirm = async (appId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/applications/${appId}/confirm`,
+        `${BASE_URL}/api/applications/${appId}/confirm`,
         {},
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -78,7 +77,7 @@ const UserDashboard = () => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/applications/${appId}/correction`,
+        `${BASE_URL}/api/applications/${appId}/correction`,
         { comment: reason },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
@@ -109,7 +108,9 @@ const UserDashboard = () => {
       </h2>
 
       {loading ? (
-        <div className="text-center text-indigo-600 animate-pulse">Loading applications...</div>
+        <div className="text-center text-indigo-600 animate-pulse">
+          Loading applications...
+        </div>
       ) : applications.length === 0 ? (
         <p className="text-gray-600">No applications found.</p>
       ) : (
@@ -168,7 +169,9 @@ const UserDashboard = () => {
                   <td className="px-4 py-3">
                     {app.status === "Completed" && app.certificate?.filename ? (
                       <button
-                        onClick={() => downloadCertificate(app.certificate.filename, app._id)}
+                        onClick={() =>
+                          downloadCertificate(app.certificate.filename, app._id)
+                        }
                         className="text-green-600 hover:underline flex items-center gap-1"
                       >
                         <Download size={14} /> Download
@@ -192,7 +195,9 @@ const UserDashboard = () => {
                           rows={2}
                           placeholder="Write correction comment..."
                           value={corrections[app._id] || ""}
-                          onChange={(e) => handleCorrectionChange(app._id, e.target.value)}
+                          onChange={(e) =>
+                            handleCorrectionChange(app._id, e.target.value)
+                          }
                           className="w-full border border-gray-300 px-2 py-1 text-xs rounded-md"
                         />
                         <button

@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
-// import { useUser } from "../context/UserContext";
 import { useAuth } from "../context/AuthContext";
-const BASE_URL = "http://localhost:5000";
+
+// env मधून BASE_URL घ्या
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 function AdminPanel() {
-  // const { user } = useUser();
-   const { user } = useAuth();
+  const { user } = useAuth();
   const [applications, setApplications] = useState([]);
   const [users, setUsers] = useState([]);
   const [services, setServices] = useState([]);
@@ -194,7 +193,7 @@ function AdminPanel() {
 
   const handleAddNotice = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/notices", {
+      const res = await axios.post(`${BASE_URL}/api/notices`, {
         title: newNotice,
       });
       setNotices([...notices, res.data]);
@@ -206,7 +205,7 @@ function AdminPanel() {
 
   const handleDeleteNotice = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/notices/${id}`);
+      await axios.delete(`${BASE_URL}/api/notices/${id}`);
       setNotices(notices.filter((n) => n._id !== id));
     } catch (err) {
       console.error("Error deleting notice", err);
@@ -215,7 +214,7 @@ function AdminPanel() {
 
   const handleSaveEdit = async (id) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/notices/${id}`, {
+      const res = await axios.put(`${BASE_URL}/api/notices/${id}`, {
         title: editedNotice,
       });
       setNotices(
@@ -316,68 +315,66 @@ function AdminPanel() {
         </button>
       </div>
 
-      {selectedTab === "banners" && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4">Upload Hero Banner</h2>
-          <form onSubmit={handleHeroUpload} className="space-y-4 max-w-md">
-            <input
-              type="text"
-              placeholder="Title"
-              value={heroTitle}
-              onChange={(e) => setHeroTitle(e.target.value)}
-              className="w-full px-4 py-2 border rounded"
-              // required
-            />
-            <input
-              type="text"
-              placeholder="Subtitle"
-              value={heroSubtitle}
-              onChange={(e) => setHeroSubtitle(e.target.value)}
-              className="w-full px-4 py-2 border rounded"
-              // required
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setHeroImage(e.target.files[0])}
-              className="w-full"
-              required
-            />
-            <button
-              type="submit"
-              className="w-full bg-pink-600 text-white py-2 rounded"
-            >
-              Upload Banner
-            </button>
-          </form>
+  {selectedTab === "banners" && (
+  <div>
+    <h2 className="text-xl font-semibold mb-4">Upload Hero Banner</h2>
+    <form onSubmit={handleHeroUpload} className="space-y-4 max-w-md">
+      <input
+        type="text"
+        placeholder="Title"
+        value={heroTitle}
+        onChange={(e) => setHeroTitle(e.target.value)}
+        className="w-full px-4 py-2 border rounded"
+      />
+      <input
+        type="text"
+        placeholder="Subtitle"
+        value={heroSubtitle}
+        onChange={(e) => setHeroSubtitle(e.target.value)}
+        className="w-full px-4 py-2 border rounded"
+      />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setHeroImage(e.target.files[0])}
+        className="w-full"
+        required
+      />
+      <button
+        type="submit"
+        className="w-full bg-pink-600 text-white py-2 rounded"
+      >
+        Upload Banner
+      </button>
+    </form>
 
-          <h3 className="text-lg font-medium mt-8 mb-4">Uploaded Banners</h3>
-          <div className="grid md:grid-cols-2 gap-4">
-            {heroSlides.map((slide) => (
-              <div
-                key={slide._id}
-                className="border rounded overflow-hidden shadow relative"
-              >
-                <img
-                  src={`http://localhost:5000/api/files/${slide.image?.filename}`}
-                  alt={slide.title}
-                  className="w-full h-[180px] object-cover"
-                />
-                <div className="p-3">
-                  <h4 className="font-bold text-lg">{slide.title}</h4>
-                  <p className="text-sm">{slide.subtitle}</p>
-                </div>
-                <button
-                  onClick={() => handleHeroDelete(slide._id)}
-                  className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 text-xs rounded"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+    <h3 className="text-lg font-medium mt-8 mb-4">Uploaded Banners</h3>
+    <div className="grid md:grid-cols-2 gap-4">
+      {heroSlides.map((slide) => (
+        <div
+          key={slide._id}
+          className="border rounded overflow-hidden shadow relative"
+        >
+          <img
+            src={`${BASE_URL}/api/files/${slide.image?.filename}`}
+            alt={slide.title}
+            className="w-full h-[180px] object-cover"
+          />
+          <div className="p-3">
+            <h4 className="font-bold text-lg">{slide.title}</h4>
+            <p className="text-sm">{slide.subtitle}</p>
           </div>
+          <button
+            onClick={() => handleHeroDelete(slide._id)}
+            className="absolute top-2 right-2 bg-red-600 text-white px-2 py-1 text-xs rounded"
+          >
+            Delete
+          </button>
         </div>
-      )}
+      ))}
+    </div>
+  </div>
+)}
 
       {/* notice tab */}
 
@@ -681,3 +678,9 @@ function AdminPanel() {
 }
 
 export default AdminPanel;
+
+
+
+
+
+

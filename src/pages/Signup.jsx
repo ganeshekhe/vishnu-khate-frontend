@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +15,9 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // 🔑 API base URL from .env
+  const API_URL = import.meta.env.VITE_BACKEND_URL;
 
   const validate = () => {
     const errs = {};
@@ -49,7 +51,8 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/auth/signup", form);
+      // 👇 Env मधून घेतलेला URL
+      await axios.post(`${API_URL}/api/auth/signup`, form);
       alert("✅ Registration Successful! Please login.");
       navigate("/login");
     } catch (err) {

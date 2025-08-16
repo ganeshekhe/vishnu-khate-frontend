@@ -1,7 +1,10 @@
+// src/pages/AuthPage.jsx
 import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const AuthPage = () => {
   const { login } = useAuth();
@@ -21,29 +24,30 @@ const AuthPage = () => {
     e.preventDefault();
     try {
       const url = isLogin
-        ? "http://localhost:5000/api/auth/login"
-        : "http://localhost:5000/api/auth/register";
+        ? `${BASE_URL}/api/auth/login`
+        : `${BASE_URL}/api/auth/register`;
 
       const res = await axios.post(url, form);
+
       if (isLogin) {
-        login(res.data);
+        localStorage.setItem("token", res.data.token);
+        await login(res.data.token);
         if (res.data.user.role === "admin") navigate("/admin");
         else if (res.data.user.role === "operator") navigate("/operator");
-        else navigate("/user");
+        else navigate("/user/dashboard");
         window.location.reload();
       } else {
-        alert("Signup successful! You can now login.");
+        alert("✅ Signup successful! You can now login.");
         setIsLogin(true);
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong");
+      alert("❌ " + (err.response?.data?.message || "Something went wrong"));
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-pink-200 to-orange-100">
       <div className="w-full max-w-5xl bg-white shadow-lg rounded-xl overflow-hidden flex flex-col md:flex-row">
-        
         {/* Left Panel */}
         <div className="md:w-1/2 bg-gradient-to-tr from-pink-600 to-orange-500 text-white flex flex-col justify-center items-center p-10">
           <img src="/logo.png" alt="Logo" className="w-28 h-28 mb-4" />

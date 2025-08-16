@@ -1,7 +1,8 @@
-
-
+// src/pages/ForgotPassword.jsx
 import { useState } from "react";
 import axios from "axios";
+
+const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1);
@@ -11,28 +12,28 @@ const ForgotPassword = () => {
 
   const sendOtp = async () => {
     try {
-      await axios.post("http://localhost:5000/api/auth/send-otp", { mobile });
-      alert("OTP sent");
+      await axios.post(`${BASE_URL}/api/auth/send-otp`, { mobile });
+      alert("✅ OTP sent successfully");
       setStep(2);
     } catch (err) {
-      alert(err.response?.data?.message || "OTP failed");
+      alert("❌ " + (err.response?.data?.message || "OTP sending failed"));
     }
   };
 
   const resetPassword = async () => {
     try {
-      await axios.post("http://localhost:5000/api/auth/reset-password", {
+      await axios.post(`${BASE_URL}/api/auth/reset-password`, {
         mobile,
         otp,
         newPassword,
       });
-      alert("Password reset successful!");
+      alert("✅ Password reset successful!");
       setStep(1);
       setMobile("");
       setOtp("");
       setNewPassword("");
     } catch (err) {
-      alert(err.response?.data?.message || "Reset failed");
+      alert("❌ " + (err.response?.data?.message || "Password reset failed"));
     }
   };
 
@@ -54,7 +55,7 @@ const ForgotPassword = () => {
             />
             <button
               onClick={sendOtp}
-              className="w-full bg-pink-500 text-white py-2 rounded"
+              className="w-full bg-pink-500 text-white py-2 rounded hover:bg-pink-600"
             >
               Send OTP
             </button>
@@ -77,7 +78,7 @@ const ForgotPassword = () => {
             />
             <button
               onClick={resetPassword}
-              className="w-full bg-green-600 text-white py-2 rounded"
+              className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
             >
               Reset Password
             </button>
@@ -89,4 +90,3 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
-
