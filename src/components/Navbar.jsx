@@ -48,14 +48,11 @@ const Navbar = () => {
 
 const NavLinks = ({ user, handleLogout, setIsOpen }) => (
   <>
-    {/* Home link: only for non-admin/operator */}
-    {(!user || user.role === "user") && (
-      <li>
-        <NavLink to="/" onClick={() => setIsOpen && setIsOpen(false)}>
-          Home
-        </NavLink>
-      </li>
-    )}
+    <li>
+      <NavLink to="/" onClick={() => setIsOpen && setIsOpen(false)}>
+        Home
+      </NavLink>
+    </li>
 
     {!user && (
       <>
@@ -103,8 +100,7 @@ const NavLinks = ({ user, handleLogout, setIsOpen }) => (
       </li>
     )}
 
-    {/* Profile + Logout only for user */}
-    {user && user.role === "user" && (
+    {user && (
       <>
         <li>
           <Link to="/profile" onClick={() => setIsOpen && setIsOpen(false)}>
@@ -134,22 +130,9 @@ const NavLinks = ({ user, handleLogout, setIsOpen }) => (
         </li>
       </>
     )}
-
-    {/* Logout for admin/operator */}
-    {user && (user.role === "admin" || user.role === "operator") && (
-      <li>
-        <button
-          onClick={() => {
-            handleLogout();
-            setIsOpen && setIsOpen(false);
-          }}
-          className="bg-white text-pink-600 px-3 py-1 rounded hover:bg-pink-100"
-        >
-          Logout
-        </button>
-      </li>
-    )}
   </>
 );
 
 export default Navbar;
+
+
