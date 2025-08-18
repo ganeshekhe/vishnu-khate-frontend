@@ -64,69 +64,89 @@ const Signup = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-orange-100 to-pink-100 p-4">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md space-y-5">
-        <h2 className="text-3xl mt-10 font-bold text-center text-orange-600">Signup</h2>
+       <form
+  onSubmit={handleSubmit}
+  className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md space-y-5"
+>
+  <h2 className="text-3xl font-bold text-center text-orange-600">Signup</h2>
 
-        {["name", "dob", "gender", "caste", "mobile", "password"].map((field) => (
-          <div key={field}>
-            {field === "gender" || field === "caste" ? (
-              <select
-                name={field}
-                value={form[field]}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${
-                  errors[field] ? "border-red-500" : "border-gray-300"
-                }`}
-              >
-                <option value="">Select {field}</option>
-                {field === "gender" && (
-                  <>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </>
-                )}
-                {field === "caste" && (
-                  <>
-                    <option value="SC">SC</option>
-                    <option value="ST">ST</option>
-                    <option value="OBC">OBC</option>
-                    <option value="General">General</option>
-                  </>
-                )}
-              </select>
-            ) : (
-              <input
-                type={field === "dob" ? "date" : field === "password" ? "password" : "text"}
-                name={field}
-                placeholder={
-                  field === "mobile"
-                    ? "10-digit Mobile"
-                    : field === "password"
-                    ? "Password (6+ chars)"
-                    : field === "name"
-                    ? "Full Name"
-                    : ""
-                }
-                value={form[field]}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg ${
-                  errors[field] ? "border-red-500" : "border-gray-300"
-                }`}
-              />
-            )}
-            {errors[field] && <p className="text-red-500 text-sm mt-1">{errors[field]}</p>}
-          </div>
-        ))}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg"
+  {["name", "dob", "gender", "caste", "mobile", "password"].map((field) => (
+    <div key={field}>
+      {field === "gender" || field === "caste" ? (
+        <select
+          name={field}
+          value={form[field]}
+          onChange={handleChange}
+          className={`w-full px-4 py-3 border rounded-lg ${
+            errors[field] ? "border-red-500" : "border-gray-300"
+          }`}
         >
-          {loading ? "Creating Account..." : "Create Account"}
-        </button>
-      </form>
+          <option value="">Select {field}</option>
+          {field === "gender" && (
+            <>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </>
+          )}
+          {field === "caste" && (
+            <>
+              <option value="SC">SC</option>
+              <option value="ST">ST</option>
+              <option value="OBC">OBC</option>
+              <option value="General">General</option>
+            </>
+          )}
+        </select>
+      ) : field === "dob" ? (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Date of Birth
+          </label>
+          <input
+            type="date"
+            name="dob"
+            value={form.dob}
+            onChange={handleChange}
+            className={`w-full px-4 py-3 border rounded-lg ${
+              errors.dob ? "border-red-500" : "border-gray-300"
+            }`}
+          />
+        </div>
+      ) : (
+        <input
+          type={field === "password" ? "password" : "text"}
+          name={field}
+          placeholder={
+            field === "mobile"
+              ? "10-digit Mobile"
+              : field === "password"
+              ? "Password (6+ chars)"
+              : field === "name"
+              ? "Full Name"
+              : ""
+          }
+          value={form[field]}
+          onChange={handleChange}
+          className={`w-full px-4 py-3 border rounded-lg ${
+            errors[field] ? "border-red-500" : "border-gray-300"
+          }`}
+        />
+      )}
+      {errors[field] && (
+        <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
+      )}
+    </div>
+  ))}
+
+  <button
+    type="submit"
+    disabled={loading}
+    className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-lg"
+  >
+    {loading ? "Creating Account..." : "Create Account"}
+  </button>
+</form>
     </div>
   );
 };
