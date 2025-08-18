@@ -156,23 +156,32 @@ const ServicesSection = () => {
 
       {/* Login Popup */}
       {showPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-sm w-full animate-fadeIn">
-            <h3 className="text-xl font-bold text-red-600 mb-4">
-              ⚠️ Please Login First!
-            </h3>
-            <p className="text-gray-700 mb-6">
-              You need to login to apply for a service.
-            </p>
-            <button
-              onClick={closePopupAndRedirect}
-              className="bg-red-500 text-white py-2 px-5 rounded-lg hover:bg-red-600 transition transform hover:scale-105 w-full"
-            >
-              Login Now
-            </button>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+    <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-sm w-full animate-fadeIn">
+      <h3 className="text-xl font-bold text-red-600 mb-4">
+        ⚠️ Please Login First!
+      </h3>
+      <p className="text-gray-700 mb-6">
+        You need to login to apply for a service.
+      </p>
+      <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <button
+          onClick={closePopupAndRedirect}
+          className="bg-red-500 text-white py-2 px-5 rounded-lg hover:bg-red-600 transition transform hover:scale-105 flex-1"
+        >
+          Login Now
+        </button>
+        <button
+          onClick={() => setShowPopup(false)}
+          className="bg-gray-300 text-gray-800 py-2 px-5 rounded-lg hover:bg-gray-400 transition transform hover:scale-105 flex-1"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </section>
   );
 };
