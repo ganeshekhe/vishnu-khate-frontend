@@ -277,13 +277,13 @@ const UserProfile = () => {
                     >
                       View
                     </a>
-                    <button
+                    {/* <button
                       type="button"
                       onClick={() => handleDeleteDoc(field)}
                       className="text-red-500 hover:text-red-700 text-xs"
                     >
                       Delete 🗑
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               )}
