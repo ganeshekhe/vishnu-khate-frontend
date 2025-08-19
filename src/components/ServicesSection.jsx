@@ -42,46 +42,48 @@ const ServicesSection = () => {
   };
 
   return (
-    <section className="py-16 px-4 bg-gradient-to-br from-[#0a0f2c] via-[#1e264d] to-[#0a0f2c] min-h-screen text-white">
-      <div className="max-w-7xl mx-auto">
+        <section className="py-16 bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen">
+   <div className="max-w-7xl mx-auto px-4">
         {/* Heading */}
-        <div className="text-center mb-12 animate-fadeInUp">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-yellow-400 tracking-wide drop-shadow">
+        <div className="text-center mb-14">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-indigo-700 tracking-tight">
             Our Services
           </h2>
-          <p className="text-lg mt-4 text-gray-300 max-w-2xl mx-auto">
+          <p className="text-gray-600 mt-3 text-lg md:text-xl"></p><p className="text-lg mt-4 text-gray-300 max-w-2xl mx-auto">
             Unlock premium digital services designed to accelerate your success.
           </p>
         </div>
 
         {/* Services Grid */}
-        <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
+<div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {services.length === 0 ? (
-            <p className="col-span-full text-center text-gray-400 text-lg">No services available</p>
+            <p className="col-span-full text-center text-gray-500 text-lg animate-pulse">No services available</p>
           ) : (
             services.map((service) => (
               <div
                 key={service._id}
-                className="relative group bg-gradient-to-br from-[#1e264d] to-[#2d3d5f] p-6 rounded-2xl shadow-xl hover:shadow-yellow-400/30 transition-all duration-500 transform hover:scale-105"
-              >
-                <div className="absolute inset-0 bg-yellow-400 opacity-10 blur-lg rounded-2xl scale-0 group-hover:scale-100 transition-transform duration-500 ease-in-out"></div>
+                className="relative bg-white p-6 rounded-2xl shadow-md hover:shadow-2xl transition duration-500 transform hover:-translate-y-2 group overflow-hidden">
 
-                <h3 className="text-xl font-bold text-white mb-3 z-10 relative">
+                     {/* gradient overlay hover */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-10 transition duration-500"></div>
+  {/* Service Title */}
+                 <h3 className="text-xl font-bold text-indigo-700 mb-2 group-hover:text-purple-700 transition-colors">
                   {service.name}
                 </h3>
-                <p className="text-gray-300 text-sm leading-relaxed z-10 relative">
+          {/* Description */}
+               <p className="text-sm text-gray-600 leading-relaxed mb-4">
                   {service.description || `Apply for ${service.name} service online.`}
                 </p>
-
+ {/* Apply Button */}
                 <button
                   onClick={() => handleApply(service._id)}
-                  className="mt-6 inline-block z-10 relative bg-yellow-400 text-black px-5 py-2 rounded-full font-semibold text-sm shadow hover:bg-yellow-300 transition-all duration-300 w-full sm:w-auto text-center"
+                  className="relative z-10 inline-block text-white bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-2 rounded-full text-sm font-medium shadow-md hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 >
                   Apply Now →
                 </button>
 
                 {/* Animated Bottom Border Glow */}
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 rounded-full" />
+                 <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-400 to-pink-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
               </div>
             ))
           )}
@@ -89,25 +91,32 @@ const ServicesSection = () => {
       </div>
 
       {/* Login Popup */}
-    {showPopup && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-    <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-sm w-full animate-fadeIn">
-      <h3 className="text-xl font-bold text-red-600 mb-4">
+   {showPopup && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 px-4 animate-fadeIn">
+    <div className="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm w-full transform transition-all duration-500 scale-95 hover:scale-100">
+      
+      {/* Heading */}
+      <h3 className="text-xl font-bold text-purple-700 mb-3">
         ⚠️ Please Login First!
       </h3>
-      <p className="text-gray-700 mb-6">
+      <p className="text-gray-600 mb-6 text-sm sm:text-base">
         You need to login to apply for a service.
       </p>
+
+      {/* Buttons */}
       <div className="flex flex-col sm:flex-row justify-center gap-4">
+        {/* Login Now */}
         <button
           onClick={closePopupAndRedirect}
-          className="bg-red-500 text-white py-2 px-5 rounded-lg hover:bg-red-600 transition transform hover:scale-105 flex-1"
+          className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-2 px-5 rounded-lg font-medium shadow-md hover:shadow-xl hover:scale-105 transition-all duration-300 flex-1"
         >
           Login Now
         </button>
+
+        {/* Cancel */}
         <button
           onClick={() => setShowPopup(false)}
-          className="bg-gray-300 text-gray-800 py-2 px-5 rounded-lg hover:bg-gray-400 transition transform hover:scale-105 flex-1"
+          className="bg-gray-200 text-gray-800 py-2 px-5 rounded-lg font-medium hover:bg-gray-300 hover:scale-105 transition-all duration-300 flex-1"
         >
           Cancel
         </button>
@@ -115,6 +124,7 @@ const ServicesSection = () => {
     </div>
   </div>
 )}
+
 
     </section>
   );
