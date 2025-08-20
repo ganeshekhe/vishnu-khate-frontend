@@ -157,27 +157,52 @@ function AdminPanel() {
     }
   };
 
+  // const handleHeroUpload = async (e) => {
+  //   e.preventDefault();
+  //   if (!heroTitle.trim() || !heroSubtitle.trim() || !heroImage)
+  //     return alert("Please fill all fields");
+  //   const formData = new FormData();
+  //   formData.append("title", heroTitle);
+  //   formData.append("subtitle", heroSubtitle);
+  //   formData.append("image", heroImage);
+  //   try {
+  //     await axios.post(`${BASE_URL}/api/heroslides`, formData, {
+  //       headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
+  //     });
+  //     alert("Hero banner uploaded successfully!");
+  //     setHeroTitle("");
+  //     setHeroSubtitle("");
+  //     setHeroImage(null);
+  //     fetchHeroSlides();
+  //   } catch (err) {
+  //     console.error("Hero upload failed:", err);
+  //   }
+  // };
+
   const handleHeroUpload = async (e) => {
-    e.preventDefault();
-    if (!heroTitle.trim() || !heroSubtitle.trim() || !heroImage)
-      return alert("Please fill all fields");
-    const formData = new FormData();
-    formData.append("title", heroTitle);
-    formData.append("subtitle", heroSubtitle);
-    formData.append("image", heroImage);
-    try {
-      await axios.post(`${BASE_URL}/api/heroslides`, formData, {
-        headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
-      });
-      alert("Hero banner uploaded successfully!");
-      setHeroTitle("");
-      setHeroSubtitle("");
-      setHeroImage(null);
-      fetchHeroSlides();
-    } catch (err) {
-      console.error("Hero upload failed:", err);
-    }
-  };
+  e.preventDefault();
+
+  // फक्त image compulsory ठेवले
+  if (!heroImage) return alert("Please select an image");
+
+  const formData = new FormData();
+  formData.append("title", heroTitle); // optional
+  formData.append("subtitle", heroSubtitle); // optional
+  formData.append("image", heroImage); // required
+
+  try {
+    await axios.post(`${BASE_URL}/api/heroslides`, formData, {
+      headers: { ...authHeaders, "Content-Type": "multipart/form-data" },
+    });
+    alert("Hero banner uploaded successfully!");
+    setHeroTitle("");
+    setHeroSubtitle("");
+    setHeroImage(null);
+    fetchHeroSlides();
+  } catch (err) {
+    console.error("Hero upload failed:", err);
+  }
+};
 
   const handleHeroDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this slide?")) return;
