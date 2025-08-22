@@ -40,7 +40,7 @@ const NoticesSection = () => {
         <div
           style={{
             display: "inline-block",
-            animation: "scrollLeft 15s linear infinite",
+            animation: "scrollLeft 55s linear infinite",
           }}
         >
           {notices.length === 0 ? (
