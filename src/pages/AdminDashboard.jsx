@@ -284,7 +284,7 @@ function AdminPanel() {
 
   return (
     <div className="p-4 md:p-6 lg:p-8 xl:p-10 bg-gradient-to-br from-gray-100 via-white to-gray-50 min-h-screen font-sans text-gray-800">
-      <h1 className="text-3xl mt-25 font-bold mb-16 text-center animate-fade-in drop-shadow-lg">Admin Dashboard</h1>
+      <h1 className="text-3xl mt-12 font-bold mb-10 text-center animate-fade-in drop-shadow-lg">Admin Dashboard</h1>
       
       
       <div className="flex space-x-4 mb-6">
