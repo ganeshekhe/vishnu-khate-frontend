@@ -314,7 +314,7 @@ import { useAuth } from "../context/AuthContext";
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 const UserProfile = () => {
-  const { user } = useUser();
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     name: "",
