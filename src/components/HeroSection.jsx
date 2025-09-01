@@ -32,10 +32,10 @@
 
 import React from "react";
 import { MessageSquare } from "lucide-react";
-import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 
 const HeroSection = () => {
-  const { user } = useUser();
+  const { user } = useAuth();
 
   const handleChatClick = () => {
     const adminNumber = "919834883059"; // Country code + number
