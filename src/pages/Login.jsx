@@ -109,8 +109,10 @@ const Login = () => {
 
   const validate = () => {
     const errs = {};
-    if (!/^[6-9]\d{9}$/.test(form.mobile)) errs.mobile = "❌ Enter valid mobile";
-    if (!form.password || form.password.length < 6) errs.password = "❌ Password too short";
+    if (!/^[6-9]\d{9}$/.test(form.mobile))
+      errs.mobile = "❌ Enter valid 10-digit mobile starting with 6-9";
+    if (!form.password || form.password.length < 6)
+      errs.password = "❌ Password must be at least 6 characters";
     return errs;
   };
 
@@ -130,17 +132,25 @@ const Login = () => {
     try {
       setLoading(true);
       const res = await axios.post(`${BASE_URL}/api/auth/login`, form);
+
+      // Save token and login
       localStorage.setItem("token", res.data.token);
       await login(res.data.token);
 
-      toast.success("✅ Login Successful!", { position: "top-right" });
+      // ✅ फक्त neat success message
+      toast.success("✅ Login Successful!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
 
+      // Redirect based on role
       setTimeout(() => {
         if (res.data.user.role === "admin") navigate("/admin");
         else if (res.data.user.role === "operator") navigate("/operator");
-        else navigate(previousPage); // go back to the page from where popup came
+        else navigate(previousPage);
       }, 1500);
     } catch (err) {
+      // ❌ फक्त error message दाखवा
       toast.error("❌ " + (err.response?.data?.message || "Login failed"), {
         position: "top-right",
       });
@@ -151,26 +161,45 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-pink-200 to-orange-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-center text-orange-600">
+          Login
+        </h2>
+
+        {/* Mobile Input */}
         <input
           type="text"
           name="mobile"
           placeholder="Mobile"
           value={form.mobile}
           onChange={handleChange}
-          className="w-full border p-2 mb-2"
+          className={`w-full border p-2 mb-2 rounded ${
+            errors.mobile ? "border-red-500" : "border-gray-300"
+          }`}
         />
-        {errors.mobile && <p className="text-red-500 text-sm">{errors.mobile}</p>}
+        {errors.mobile && (
+          <p className="text-red-500 text-sm">{errors.mobile}</p>
+        )}
+
+        {/* Password Input */}
         <input
           type="password"
           name="password"
           placeholder="Password"
           value={form.password}
           onChange={handleChange}
-          className="w-full border p-2 mb-2"
+          className={`w-full border p-2 mb-2 rounded ${
+            errors.password ? "border-red-500" : "border-gray-300"
+          }`}
         />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password}</p>
+        )}
+
+        {/* Login Button */}
         <button
           type="submit"
           disabled={loading}
@@ -188,7 +217,8 @@ const Login = () => {
           Back
         </button>
 
-        <p className="mt-3 text-sm">
+        {/* Signup Link */}
+        <p className="mt-3 text-sm text-center">
           Don't have an account?{" "}
           <Link to="/signup" className="text-blue-500">
             Signup

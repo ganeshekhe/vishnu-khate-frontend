@@ -209,15 +209,24 @@ const Signup = () => {
 
     try {
       setLoading(true);
+
+      // backend ला request
       await axios.post(`${API_URL}/api/auth/signup`, form);
+
+      // ✅ फक्त success message, कुठलाही URL नाही
       toast.success("✅ Registration Successful! Please login.", {
         position: "top-right",
+        autoClose: 2000,
       });
+
+      // ⏳ 2 सेकंदाने redirect करायचं
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      toast.error("❌ " + (err.response?.data?.message || "Something went wrong"), {
-        position: "top-right",
-      });
+      // ❌ फक्त error message, raw URL/data नाही
+      toast.error(
+        "❌ " + (err.response?.data?.message || "Something went wrong"),
+        { position: "top-right" }
+      );
     } finally {
       setLoading(false);
     }
