@@ -214,6 +214,7 @@
 // export default Navbar;
 
 
+// src/components/Navbar.jsx
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
@@ -288,21 +289,67 @@ const Navbar = () => {
 
 const NavLinks = ({ user, handleLogout, setIsOpen }) => (
   <>
-    {/* Home link for user */}
-    {(!user || user.role === "user") && (
-      <li>
-        <NavLink
-          to="/"
-          onClick={() => setIsOpen && setIsOpen(false)}
-          className={({ isActive }) =>
-            `hover:text-yellow-200 transition-colors ${isActive ? "font-bold underline" : ""}`
-          }
-        >
-          Home
-        </NavLink>
-      </li>
-    )}
+    {/* Home link - always visible */}
+    <li>
+      <NavLink
+        to="/"
+        onClick={() => setIsOpen && setIsOpen(false)}
+        className={({ isActive }) =>
+          `hover:text-yellow-200 transition-colors ${isActive ? "font-bold underline" : ""}`
+        }
+      >
+        Home
+      </NavLink>
+    </li>
 
+    {/* Public Pages - accessible even if not logged in */}
+    <li>
+      <NavLink
+        to="/cancellation-refund"
+        onClick={() => setIsOpen && setIsOpen(false)}
+        className="hover:text-yellow-200 transition-colors"
+      >
+        Cancellation & Refunds
+      </NavLink>
+    </li>
+    <li>
+      <NavLink
+        to="/terms-conditions"
+        onClick={() => setIsOpen && setIsOpen(false)}
+        className="hover:text-yellow-200 transition-colors"
+      >
+        Terms & Conditions
+      </NavLink>
+    </li>
+    <li>
+      <NavLink
+        to="/shipping"
+        onClick={() => setIsOpen && setIsOpen(false)}
+        className="hover:text-yellow-200 transition-colors"
+      >
+        Shipping
+      </NavLink>
+    </li>
+    <li>
+      <NavLink
+        to="/privacy"
+        onClick={() => setIsOpen && setIsOpen(false)}
+        className="hover:text-yellow-200 transition-colors"
+      >
+        Privacy
+      </NavLink>
+    </li>
+    <li>
+      <NavLink
+        to="/contact-us"
+        onClick={() => setIsOpen && setIsOpen(false)}
+        className="hover:text-yellow-200 transition-colors"
+      >
+        Contact Us
+      </NavLink>
+    </li>
+
+    {/* Auth Links */}
     {!user && (
       <>
         <li>
@@ -326,7 +373,7 @@ const NavLinks = ({ user, handleLogout, setIsOpen }) => (
       </>
     )}
 
-    {/* User links */}
+    {/* User Links */}
     {user && user.role === "user" && (
       <>
         <li>
@@ -345,53 +392,6 @@ const NavLinks = ({ user, handleLogout, setIsOpen }) => (
             className="hover:text-yellow-200 transition-colors"
           >
             Apply Service
-          </NavLink>
-        </li>
-
-        {/* Razorpay Policy Pages */}
-        <li>
-          <NavLink
-            to="/cancellation-refund"
-            onClick={() => setIsOpen && setIsOpen(false)}
-            className="hover:text-yellow-200 transition-colors"
-          >
-            Cancellation & Refunds
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/terms-conditions"
-            onClick={() => setIsOpen && setIsOpen(false)}
-            className="hover:text-yellow-200 transition-colors"
-          >
-            Terms & Conditions
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/shipping"
-            onClick={() => setIsOpen && setIsOpen(false)}
-            className="hover:text-yellow-200 transition-colors"
-          >
-            Shipping
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/privacy"
-            onClick={() => setIsOpen && setIsOpen(false)}
-            className="hover:text-yellow-200 transition-colors"
-          >
-            Privacy
-          </NavLink>
-        </li>
-        <li>
-          <NavLink
-            to="/contact-us"
-            onClick={() => setIsOpen && setIsOpen(false)}
-            className="hover:text-yellow-200 transition-colors"
-          >
-            Contact Us
           </NavLink>
         </li>
 
