@@ -31,7 +31,17 @@ const Shipping = () => {
           href="/contact-us"
           className="text-blue-600 hover:underline font-medium"
         >
-          Contact Us
+          <h2 className="text-xl font-semibold mt-6 mb-2 text-gray-800">
+  Contact Information
+</h2>
+<p className="mb-4 text-gray-700">
+  For any queries related to this Shipping Policy, please contact us at:  
+  <br />
+  Email: support@yourdomain.com  
+  <br />
+  Phone: +91-9876543210
+</p>
+
         </a>{" "}
         page. Our support team will resolve your concerns at the earliest.
       </p>
