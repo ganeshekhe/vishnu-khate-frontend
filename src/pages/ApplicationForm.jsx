@@ -820,7 +820,21 @@ const ApplicationForm = () => {
         .catch((err) => console.error("Error fetching services:", err));
     }
   }, [user, userCaste]);
-  
+  useEffect(() => {
+  const script = document.createElement("script");
+  script.src = "https://checkout.razorpay.com/v1/checkout.js";
+  script.async = true;
+  document.body.appendChild(script);
+
+  script.onload = () => {
+    console.log("✅ Razorpay SDK loaded");
+  };
+
+  return () => {
+    document.body.removeChild(script);
+  };
+}, []);
+
 
   // ✅ Fee Calculation
   const calculateFee = (service, casteValue = userCaste) => {
