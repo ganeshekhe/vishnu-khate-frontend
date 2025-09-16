@@ -895,28 +895,55 @@ const ApplicationForm = () => {
       }
 
       // Step 3: Open Razorpay Checkout
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY,
-        amount: order.amount,
-        currency: order.currency,
-        order_id: order.orderId,
-        name: "Maha e-Seva Portal",
-        description: "Application Fee Payment",
-        handler: async function (response) {
-          // Step 4: Verify Payment
-          await verifyPayment(
-            applicationId,
-            response.razorpay_order_id,
-            response.razorpay_payment_id,
-            response.razorpay_signature,
-            fees.total
-          );
+      // const options = {
+      //   key: import.meta.env.VITE_RAZORPAY_KEY,
+      //   amount: order.amount,
+      //   currency: order.currency,
+      //   order_id: order.orderId,
+      //   name: "Maha e-Seva Portal",
+      //   description: "Application Fee Payment",
+      //   handler: async function (response) {
+      //     // Step 4: Verify Payment
+      //     await verifyPayment(
+      //       applicationId,
+      //       response.razorpay_order_id,
+      //       response.razorpay_payment_id,
+      //       response.razorpay_signature,
+      //       fees.total
+      //     );
 
-          socket.emit("application:new", res.data.application);
-          setShowPopup(true);
-        },
-        theme: { color: "#3399cc" },
-      };
+      //     socket.emit("application:new", res.data.application);
+      //     setShowPopup(true);
+      //   },
+      //   theme: { color: "#3399cc" },
+      // };
+const options = {
+  key: import.meta.env.VITE_RAZORPAY_KEY,
+  amount: order.amount,
+  currency: order.currency,
+  order_id: order.orderId,
+  name: "Maha e-Seva Portal",
+  description: "Application Fee Payment",
+  handler: async function (response) {
+    await verifyPayment(
+      applicationId,
+      response.razorpay_order_id,
+      response.razorpay_payment_id,
+      response.razorpay_signature,
+      fees.total
+    );
+    socket.emit("application:new", res.data.application);
+    setShowPopup(true);
+  },
+  theme: { color: "#3399cc" },
+  // 👇 optional, force enable UPI by default
+  method: {
+    upi: true,   // ✅ UPI allowed
+    card: true,  // ✅ Card allowed
+    netbanking: true,
+    wallet: true,
+  },
+};
 
       const rzp = new window.Razorpay(options);
       rzp.open();
