@@ -296,6 +296,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // login context
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+console.log("🌍 BASE_URL (from env):", BASE_URL);
 
 const ServicesSection = () => {
   const [categories, setCategories] = useState([]);
@@ -361,6 +362,8 @@ const ServicesSection = () => {
 
     setFilteredServices(filtered);
   };
+ 
+
 
   const handleApplyClick = (serviceId) => {
     if (!user?.token) {
