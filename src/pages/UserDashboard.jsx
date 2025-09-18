@@ -760,7 +760,7 @@ const UserDashboard = () => {
                   </td>
 
                   {/* ✅ Payment Column */}
-                  <td className="px-4 py-3">
+                  {/* <td className="px-4 py-3">
                     {app.paymentInfo ? (
                       <span
                         className={`px-2 py-1 rounded-md text-xs inline-flex items-center gap-1 ${
@@ -777,7 +777,25 @@ const UserDashboard = () => {
                     ) : (
                       <span className="text-gray-400">N/A</span>
                     )}
-                  </td>
+                  </td> */}
+<td className="px-4 py-3">
+  {app.paymentInfo ? (
+    <span
+      className={`px-2 py-1 rounded-md text-xs inline-flex items-center gap-1 ${
+        app.paymentInfo.paymentStatus === "Paid"
+          ? "bg-green-100 text-green-700 border border-green-300"
+          : app.paymentInfo.paymentStatus === "Failed"
+          ? "bg-red-100 text-red-700 border border-red-300"
+          : "bg-yellow-100 text-yellow-700 border border-yellow-300"
+      }`}
+    >
+      <IndianRupee size={12} />
+      {app.paymentInfo.paymentStatus} (₹{app.paymentInfo.amount || 0})
+    </span>
+  ) : (
+    <span className="text-gray-400">N/A</span>
+  )}
+</td>
 
                   <td className="px-4 py-3">
                     {app.formPdf?.filename ? (
