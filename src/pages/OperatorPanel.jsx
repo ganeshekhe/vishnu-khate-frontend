@@ -1030,6 +1030,7 @@ import { useAuth } from "../context/AuthContext";
 import { io } from "socket.io-client";
 import toast, { Toaster } from "react-hot-toast";
 import { IndianRupee } from "lucide-react";
+import { initSocket } from "../socket";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 const socket = io(BASE_URL);
@@ -1087,32 +1088,61 @@ const OperatorPanel = () => {
     if (user?.token) fetchApplications();
   }, [user?.token]);
 
-  useEffect(() => {
-    socket.on("applicationCreated", (newApp) => {
-      setApplications((prev) => {
-        const updatedApps = [newApp, ...prev];
-        countStatus(updatedApps);
-        return updatedApps;
-      });
-      toast.success("📄 New Application Received");
-    });
+  // useEffect(() => {
+  //   socket.on("applicationCreated", (newApp) => {
+  //     setApplications((prev) => {
+  //       const updatedApps = [newApp, ...prev];
+  //       countStatus(updatedApps);
+  //       return updatedApps;
+  //     });
+  //     toast.success("📄 New Application Received");
+  //   });
 
-    socket.on("applicationStatusUpdated", (updatedApp) => {
-      setApplications((prev) => {
-        const updatedApps = prev.map((app) =>
-          app._id === updatedApp._id ? updatedApp : app
-        );
-        countStatus(updatedApps);
-        return updatedApps;
-      });
-      toast.info(`✅ Status Updated: ${updatedApp.status}`);
-    });
+  //   socket.on("applicationStatusUpdated", (updatedApp) => {
+  //     setApplications((prev) => {
+  //       const updatedApps = prev.map((app) =>
+  //         app._id === updatedApp._id ? updatedApp : app
+  //       );
+  //       countStatus(updatedApps);
+  //       return updatedApps;
+  //     });
+  //     toast.info(`✅ Status Updated: ${updatedApp.status}`);
+  //   });
 
-    return () => {
-      socket.off("applicationCreated");
-      socket.off("applicationStatusUpdated");
-    };
-  }, []);
+  //   return () => {
+  //     socket.off("applicationCreated");
+  //     socket.off("applicationStatusUpdated");
+  //   };
+  // }, []);
+
+
+useEffect(() => {
+  if (!user?.token) return;
+  const socket = initSocket(user.token);
+
+  socket.on("applicationCreated", (newApp) => {
+    setApplications((prev) => [newApp, ...prev]);
+  });
+
+  socket.on("applicationStatusUpdated", (updatedApp) => {
+    setApplications((prev) =>
+      prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+    );
+  });
+
+  socket.on("certificateUploaded", (updatedApp) => {
+    setApplications((prev) =>
+      prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+    );
+  });
+
+  return () => {
+    socket.off("applicationCreated");
+    socket.off("applicationStatusUpdated");
+    socket.off("certificateUploaded");
+  };
+}, [user]);
+
 
   const fetchApplications = async () => {
     try {
