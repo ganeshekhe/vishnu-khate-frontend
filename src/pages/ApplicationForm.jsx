@@ -788,7 +788,9 @@ const ApplicationForm = () => {
 
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(serviceId || "");
-  const [subservices, setSubservices] = useState([]);
+  // const [subservices, setSubservices] = useState([]);
+    const [subservices, setSubservices] = useState([]);
+
   const [selectedSubservice, setSelectedSubservice] = useState("");
   const [fees, setFees] = useState({ serviceFee: 0, platformFee: 0, total: 0 });
   const [userCaste, setUserCaste] = useState("");
@@ -872,15 +874,21 @@ const ApplicationForm = () => {
     e.preventDefault();
     try {
       // Step 1: Draft Application create
-      const res = await axios.post(
-        `${BASE_URL}/api/applications/draft`,
-        {
-          serviceId: selectedService,
-          subServiceId: selectedSubservice || null,
-          userId: user.id,
-        },
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      );
+      const sub = subservices.find((s) => s._id === selectedSubservice);
+      const res = await axios.post(`${BASE_URL}/api/applications/draft`, {
+  serviceId: selectedService,
+  subService: sub ? { _id: sub._id, name: sub.name } : null,  // ✅ पूर्ण object
+  userId: user.id,
+}, { headers: { Authorization: `Bearer ${user.token}` } });
+      // await axios.post(
+      //   `${BASE_URL}/api/applications/draft`,
+      //   {
+      //     serviceId: selectedService,
+      //     subServiceId: selectedSubservice || null,
+      //     userId: user.id,
+      //   },
+      //   { headers: { Authorization: `Bearer ${user.token}` } }
+      // );
 
       const applicationId = res.data.application._id;
       console.log("💰 Total fees:", fees.total, "📄 ApplicationId:", applicationId);
