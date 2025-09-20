@@ -1,28 +1,186 @@
-// // // // src/pages/ApplicationForm.jsx
+// // // // // src/pages/ApplicationForm.jsx
+// // // // import { useEffect, useState } from "react";
+// // // // import { useParams, useNavigate } from "react-router-dom";
+// // // // import axios from "axios";
+// // // // import { useAuth } from "../context/AuthContext";
+
+// // // // const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
+// // // // const ApplicationForm = () => {
+// // // //   const { serviceId } = useParams();
+// // // //   const { user } = useAuth();
+// // // //   const navigate = useNavigate();
+
+// // // //   const [services, setServices] = useState([]);
+// // // //   const [selectedService, setSelectedService] = useState(serviceId || "");
+// // // //   const [selectedPrice, setSelectedPrice] = useState("");
+// // // //   const [userCaste, setUserCaste] = useState("");
+// // // //   const [showPopup, setShowPopup] = useState(false);
+
+// // // //   useEffect(() => {
+// // // //     if (user?.token) {
+// // // //       const headers = { Authorization: `Bearer ${user.token}` };
+
+// // // //       axios
+// // // //         .get(`${BASE_URL}/api/users/me`, { headers })
+// // // //         .then((res) => setUserCaste(res.data.caste || "General"))
+// // // //         .catch((err) => console.error("Error fetching user caste:", err));
+// // // //     }
+// // // //   }, [user]);
+
+// // // //   useEffect(() => {
+// // // //     if (user?.token && userCaste) {
+// // // //       const headers = { Authorization: `Bearer ${user.token}` };
+
+// // // //       axios
+// // // //         .get(`${BASE_URL}/api/services`, { headers })
+// // // //         .then((res) => {
+// // // //           setServices(res.data);
+// // // //           if (serviceId) handleServiceChange(serviceId, res.data, userCaste);
+// // // //         })
+// // // //         .catch((err) => console.error("Error fetching services:", err));
+// // // //     }
+// // // //   }, [user, userCaste]);
+
+// // // //   const handleServiceChange = (
+// // // //     serviceIdValue,
+// // // //     serviceList = services,
+// // // //     casteValue = userCaste
+// // // //   ) => {
+// // // //     setSelectedService(serviceIdValue);
+// // // //     const service = serviceList.find((s) => s._id === serviceIdValue);
+// // // //     if (service && service.fees) {
+// // // //       const casteKey = (casteValue || "General").toUpperCase();
+// // // //       const matchingKey = Object.keys(service.fees).find(
+// // // //         (key) => key.toUpperCase() === casteKey
+// // // //       );
+// // // //       const fee = matchingKey
+// // // //         ? service.fees[matchingKey]
+// // // //         : service.fees["General"] || 0;
+// // // //       setSelectedPrice(fee);
+// // // //     } else {
+// // // //       setSelectedPrice(0);
+// // // //     }
+// // // //   };
+
+// // // //   const handleSubmit = async (e) => {
+// // // //     e.preventDefault();
+
+// // // //     try {
+// // // //       await axios.post(
+// // // //         `${BASE_URL}/api/applications`,
+// // // //         {
+// // // //           serviceId: selectedService,
+// // // //           userId: user.id,
+// // // //         },
+// // // //         {
+// // // //           headers: { Authorization: `Bearer ${user.token}` },
+// // // //         }
+// // // //       );
+
+// // // //       setShowPopup(true);
+// // // //     } catch (err) {
+// // // //       console.error("Error submitting application:", err);
+// // // //       alert("Submission failed");
+// // // //     }
+// // // //   };
+
+// // // //   const closePopupAndNavigate = () => {
+// // // //     setShowPopup(false);
+// // // //     navigate("/user/dashboard");
+// // // //   };
+
+// // // //   return (
+// // // //     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
+// // // //       <form
+// // // //         onSubmit={handleSubmit}
+// // // //         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md transform hover:scale-[1.02] transition-transform duration-300"
+// // // //       >
+// // // //         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+// // // //           Apply for a Service
+// // // //         </h2>
+
+// // // //         <select
+// // // //           value={selectedService}
+// // // //           onChange={(e) => handleServiceChange(e.target.value)}
+// // // //           className="border border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+// // // //           required
+// // // //         >
+// // // //           <option value="">-- Select Service --</option>
+// // // //           {services.map((service) => (
+// // // //             <option key={service._id} value={service._id}>
+// // // //               {service.name}
+// // // //             </option>
+// // // //           ))}
+// // // //         </select>
+
+// // // //         <div className="mt-4 text-lg text-gray-700">
+// // // //           <b>Fees:</b> ₹ {selectedPrice || "0"}
+// // // //         </div>
+
+// // // //         <button
+// // // //           type="submit"
+// // // //           className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 rounded-lg shadow-md hover:from-pink-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105"
+// // // //         >
+// // // //           Submit Application
+// // // //         </button>
+// // // //       </form>
+
+// // // //       {showPopup && (
+// // // //         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+// // // //           <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-sm mx-auto animate-fadeIn">
+// // // //             <h3 className="text-xl font-bold text-green-600 mb-4">
+// // // //               🎉 Application Submitted Successfully!
+// // // //             </h3>
+// // // //             <button
+// // // //               onClick={closePopupAndNavigate}
+// // // //               className="bg-green-500 text-white py-2 px-5 rounded-lg hover:bg-green-600 transition transform hover:scale-105"
+// // // //             >
+// // // //               Go to Dashboard
+// // // //             </button>
+// // // //           </div>
+// // // //         </div>
+// // // //       )}
+// // // //     </div>
+// // // //   );
+// // // // };
+
+// // // // export default ApplicationForm;
+
+
+
+
+
+
 // // // import { useEffect, useState } from "react";
 // // // import { useParams, useNavigate } from "react-router-dom";
 // // // import axios from "axios";
 // // // import { useAuth } from "../context/AuthContext";
-
+// // // import { io } from "socket.io-client";
 // // // const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
+
+// // // const socket = io(BASE_URL); // 👈 connect once
 
 // // // const ApplicationForm = () => {
 // // //   const { serviceId } = useParams();
-// // //   const { user } = useAuth();
+// // // const { user } = useAuth();
 // // //   const navigate = useNavigate();
 
 // // //   const [services, setServices] = useState([]);
 // // //   const [selectedService, setSelectedService] = useState(serviceId || "");
-// // //   const [selectedPrice, setSelectedPrice] = useState("");
+// // //   const [subservices, setSubservices] = useState([]);
+// // //   const [selectedSubservice, setSelectedSubservice] = useState("");
+// // //   const [fees, setFees] = useState({ serviceFee: 0, platformFee: 0, total: 0 });
 // // //   const [userCaste, setUserCaste] = useState("");
 // // //   const [showPopup, setShowPopup] = useState(false);
 
 // // //   useEffect(() => {
 // // //     if (user?.token) {
-// // //       const headers = { Authorization: `Bearer ${user.token}` };
-
 // // //       axios
-// // //         .get(`${BASE_URL}/api/users/me`, { headers })
+// // //         .get(`${BASE_URL}/api/users/me`, {
+// // //           headers: { Authorization: `Bearer ${user.token}` },
+// // //         })
 // // //         .then((res) => setUserCaste(res.data.caste || "General"))
 // // //         .catch((err) => console.error("Error fetching user caste:", err));
 // // //     }
@@ -30,10 +188,10 @@
 
 // // //   useEffect(() => {
 // // //     if (user?.token && userCaste) {
-// // //       const headers = { Authorization: `Bearer ${user.token}` };
-
 // // //       axios
-// // //         .get(`${BASE_URL}/api/services`, { headers })
+// // //         .get(`${BASE_URL}/api/services`, {
+// // //           headers: { Authorization: `Bearer ${user.token}` },
+// // //         })
 // // //         .then((res) => {
 // // //           setServices(res.data);
 // // //           if (serviceId) handleServiceChange(serviceId, res.data, userCaste);
@@ -42,41 +200,51 @@
 // // //     }
 // // //   }, [user, userCaste]);
 
-// // //   const handleServiceChange = (
-// // //     serviceIdValue,
-// // //     serviceList = services,
-// // //     casteValue = userCaste
-// // //   ) => {
+// // //   const calculateFee = (service, casteValue = userCaste) => {
+// // //     if (!service?.fees) return 0;
+// // //     const casteKey = (casteValue || "General").toUpperCase();
+// // //     const matchingKey = Object.keys(service.fees).find(
+// // //       (key) => key.toUpperCase() === casteKey
+// // //     );
+// // //     return matchingKey ? service.fees[matchingKey] : service.fees.General || 0;
+// // //   };
+
+// // //   const handleServiceChange = (serviceIdValue, serviceList = services, casteValue = userCaste) => {
 // // //     setSelectedService(serviceIdValue);
+// // //     setSelectedSubservice("");
 // // //     const service = serviceList.find((s) => s._id === serviceIdValue);
-// // //     if (service && service.fees) {
-// // //       const casteKey = (casteValue || "General").toUpperCase();
-// // //       const matchingKey = Object.keys(service.fees).find(
-// // //         (key) => key.toUpperCase() === casteKey
-// // //       );
-// // //       const fee = matchingKey
-// // //         ? service.fees[matchingKey]
-// // //         : service.fees["General"] || 0;
-// // //       setSelectedPrice(fee);
-// // //     } else {
-// // //       setSelectedPrice(0);
+
+// // //     if (service) {
+// // //       setSubservices(service.subservices || []);
+// // //       const fee = calculateFee(service, casteValue);
+// // //       const platformFee = service.platformFee || 0; // 👈 take from DB
+// // //       setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
 // // //     }
+// // //   };
+
+// // //   const handleSubserviceChange = (subId) => {
+// // //     setSelectedSubservice(subId);
+// // //     const sub = subservices.find((s) => s._id === subId);
+// // //     const fee = calculateFee(sub);
+// // //     const platformFee = sub?.platformFee || 0; // 👈 take from DB
+// // //     setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
 // // //   };
 
 // // //   const handleSubmit = async (e) => {
 // // //     e.preventDefault();
-
 // // //     try {
-// // //       await axios.post(
+// // //       const res = await axios.post(
 // // //         `${BASE_URL}/api/applications`,
 // // //         {
 // // //           serviceId: selectedService,
+// // //           subServiceId: selectedSubservice || null,
 // // //           userId: user.id,
 // // //         },
-// // //         {
-// // //           headers: { Authorization: `Bearer ${user.token}` },
-// // //         }
+// // //         { headers: { Authorization: `Bearer ${user.token}` } }
 // // //       );
+
+// // //       // 👇 Emit event for realtime update
+// // //       socket.emit("application:new", res.data.application);
 
 // // //       setShowPopup(true);
 // // //     } catch (err) {
@@ -94,7 +262,7 @@
 // // //     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
 // // //       <form
 // // //         onSubmit={handleSubmit}
-// // //         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md transform hover:scale-[1.02] transition-transform duration-300"
+// // //         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md"
 // // //       >
 // // //         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
 // // //           Apply for a Service
@@ -103,7 +271,7 @@
 // // //         <select
 // // //           value={selectedService}
 // // //           onChange={(e) => handleServiceChange(e.target.value)}
-// // //           className="border border-gray-300 rounded-lg p-3 w-full text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all"
+// // //           className="border border-gray-300 rounded-lg p-3 w-full"
 // // //           required
 // // //         >
 // // //           <option value="">-- Select Service --</option>
@@ -114,27 +282,266 @@
 // // //           ))}
 // // //         </select>
 
+// // //         {subservices.length > 0 && (
+// // //           <select
+// // //             value={selectedSubservice}
+// // //             onChange={(e) => handleSubserviceChange(e.target.value)}
+// // //             className="mt-4 border border-gray-300 rounded-lg p-3 w-full"
+// // //           >
+// // //             <option value="">-- Select Subservice --</option>
+// // //             {subservices.map((sub) => (
+// // //               <option key={sub._id} value={sub._id}>
+// // //                 {sub.name}
+// // //               </option>
+// // //             ))}
+// // //           </select>
+// // //         )}
+
 // // //         <div className="mt-4 text-lg text-gray-700">
-// // //           <b>Fees:</b> ₹ {selectedPrice || "0"}
+// // //           <b>Service Fee:</b> ₹ {fees.serviceFee}
+// // //           <br />
+// // //           <b>Platform Fee:</b> ₹ {fees.platformFee}
+// // //           <br />
+// // //           <b>Total:</b>{" "}
+// // //           <span className="text-green-700 font-bold">₹ {fees.total}</span>
 // // //         </div>
 
 // // //         <button
 // // //           type="submit"
-// // //           className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-3 rounded-lg shadow-md hover:from-pink-500 hover:to-purple-500 transition-all duration-300 transform hover:scale-105"
+// // //           className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg"
 // // //         >
 // // //           Submit Application
 // // //         </button>
 // // //       </form>
 
+// // //       {/* Success Popup */}
 // // //       {showPopup && (
-// // //         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-// // //           <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-sm mx-auto animate-fadeIn">
+// // //         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+// // //           <div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-sm w-full">
 // // //             <h3 className="text-xl font-bold text-green-600 mb-4">
 // // //               🎉 Application Submitted Successfully!
 // // //             </h3>
+// // //             <p className="text-gray-600 mb-6">
+// // //               Your application has been submitted successfully.
+// // //             </p>
 // // //             <button
 // // //               onClick={closePopupAndNavigate}
-// // //               className="bg-green-500 text-white py-2 px-5 rounded-lg hover:bg-green-600 transition transform hover:scale-105"
+// // //               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+// // //             >
+// // //               Go to Dashboard
+// // //             </button>
+// // //           </div>
+// // //         </div>
+// // //       )}
+// // //     </div>
+// // //   );
+// // // };
+
+// // // export default ApplicationForm;
+// // // import { useEffect, useState } from "react";
+// // // import { useParams, useNavigate } from "react-router-dom";
+// // // import axios from "axios";
+// // // import { useAuth } from "../context/AuthContext";
+// // // import { io } from "socket.io-client";
+// // // import { createOrder, verifyPayment } from "../api/paymentApi"; // ✅ Payment API
+// // // const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+
+// // // const socket = io(BASE_URL); // 👈 connect once
+
+// // // const ApplicationForm = () => {
+// // //   const { serviceId } = useParams();
+// // //   const { user } = useAuth();
+// // //   const navigate = useNavigate();
+
+// // //   const [services, setServices] = useState([]);
+// // //   const [selectedService, setSelectedService] = useState(serviceId || "");
+// // //   const [subservices, setSubservices] = useState([]);
+// // //   const [selectedSubservice, setSelectedSubservice] = useState("");
+// // //   const [fees, setFees] = useState({ serviceFee: 0, platformFee: 0, total: 0 });
+// // //   const [userCaste, setUserCaste] = useState("");
+// // //   const [showPopup, setShowPopup] = useState(false);
+
+// // //   useEffect(() => {
+// // //     if (user?.token) {
+// // //       axios
+// // //         .get(`${BASE_URL}/api/users/me`, {
+// // //           headers: { Authorization: `Bearer ${user.token}` },
+// // //         })
+// // //         .then((res) => setUserCaste(res.data.caste || "General"))
+// // //         .catch((err) => console.error("Error fetching user caste:", err));
+// // //     }
+// // //   }, [user]);
+
+// // //   useEffect(() => {
+// // //     if (user?.token && userCaste) {
+// // //       axios
+// // //         .get(`${BASE_URL}/api/services`, {
+// // //           headers: { Authorization: `Bearer ${user.token}` },
+// // //         })
+// // //         .then((res) => {
+// // //           setServices(res.data);
+// // //           if (serviceId) handleServiceChange(serviceId, res.data, userCaste);
+// // //         })
+// // //         .catch((err) => console.error("Error fetching services:", err));
+// // //     }
+// // //   }, [user, userCaste]);
+
+// // //   const calculateFee = (service, casteValue = userCaste) => {
+// // //     if (!service?.fees) return 0;
+// // //     const casteKey = (casteValue || "General").toUpperCase();
+// // //     const matchingKey = Object.keys(service.fees).find(
+// // //       (key) => key.toUpperCase() === casteKey
+// // //     );
+// // //     return matchingKey ? service.fees[matchingKey] : service.fees.General || 0;
+// // //   };
+
+// // //   const handleServiceChange = (serviceIdValue, serviceList = services, casteValue = userCaste) => {
+// // //     setSelectedService(serviceIdValue);
+// // //     setSelectedSubservice("");
+// // //     const service = serviceList.find((s) => s._id === serviceIdValue);
+
+// // //     if (service) {
+// // //       setSubservices(service.subservices || []);
+// // //       const fee = calculateFee(service, casteValue);
+// // //       const platformFee = service.platformFee || 0; // 👈 from DB
+// // //       setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
+// // //     }
+// // //   };
+
+// // //   const handleSubserviceChange = (subId) => {
+// // //     setSelectedSubservice(subId);
+// // //     const sub = subservices.find((s) => s._id === subId);
+// // //     const fee = calculateFee(sub);
+// // //     const platformFee = sub?.platformFee || 0; // 👈 from DB
+// // //     setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
+// // //   };
+
+// // //   // ✅ Application + Razorpay Payment Flow
+// // //   const handleSubmit = async (e) => {
+// // //     e.preventDefault();
+// // //     try {
+// // //       // Step 1: Draft Application create करा
+// // //       const res = await axios.post(
+// // //         `${BASE_URL}/api/applications/draft`,
+// // //         {
+// // //           serviceId: selectedService,
+// // //           subServiceId: selectedSubservice || null,
+// // //           userId: user.id,
+// // //         },
+// // //         { headers: { Authorization: `Bearer ${user.token}` } }
+// // //       );
+
+// // //       const applicationId = res.data._id;
+
+// // //       // Step 2: Create Razorpay Order
+// // //       const order = await createOrder(fees.total, applicationId);
+
+// // //       // Step 3: Open Razorpay Checkout
+// // //       const options = {
+// // //         key: import.meta.env.VITE_RAZORPAY_KEY,
+// // //         amount: order.amount,
+// // //         currency: order.currency,
+// // //         order_id: order.orderId,
+// // //         name: "Maha e-Seva Portal",
+// // //         description: "Application Fee Payment",
+// // //         handler: async function (response) {
+// // //           // Step 4: Verify Payment
+// // //           await verifyPayment(
+// // //             applicationId,
+// // //             response.razorpay_order_id,
+// // //             response.razorpay_payment_id,
+// // //             response.razorpay_signature,
+// // //             fees.total
+// // //           );
+
+// // //           socket.emit("application:new", res.data.application);
+// // //           setShowPopup(true);
+// // //         },
+// // //         theme: { color: "#3399cc" },
+// // //       };
+
+// // //       const rzp = new window.Razorpay(options);
+// // //       rzp.open();
+// // //     } catch (err) {
+// // //       console.error("Error submitting application:", err);
+// // //       alert("❌ Submission or Payment failed");
+// // //     }
+// // //   };
+
+// // //   const closePopupAndNavigate = () => {
+// // //     setShowPopup(false);
+// // //     navigate("/user/dashboard");
+// // //   };
+
+// // //   return (
+// // //     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
+// // //       <form
+// // //         onSubmit={handleSubmit}
+// // //         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md"
+// // //       >
+// // //         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+// // //           Apply for a Service
+// // //         </h2>
+
+// // //         <select
+// // //           value={selectedService}
+// // //           onChange={(e) => handleServiceChange(e.target.value)}
+// // //           className="border border-gray-300 rounded-lg p-3 w-full"
+// // //           required
+// // //         >
+// // //           <option value="">-- Select Service --</option>
+// // //           {services.map((service) => (
+// // //             <option key={service._id} value={service._id}>
+// // //               {service.name}
+// // //             </option>
+// // //           ))}
+// // //         </select>
+
+// // //         {subservices.length > 0 && (
+// // //           <select
+// // //             value={selectedSubservice}
+// // //             onChange={(e) => handleSubserviceChange(e.target.value)}
+// // //             className="mt-4 border border-gray-300 rounded-lg p-3 w-full"
+// // //           >
+// // //             <option value="">-- Select Subservice --</option>
+// // //             {subservices.map((sub) => (
+// // //               <option key={sub._id} value={sub._id}>
+// // //                 {sub.name}
+// // //               </option>
+// // //             ))}
+// // //           </select>
+// // //         )}
+
+// // //         <div className="mt-4 text-lg text-gray-700">
+// // //           <b>Service Fee:</b> ₹ {fees.serviceFee}
+// // //           <br />
+// // //           <b>Platform Fee:</b> ₹ {fees.platformFee}
+// // //           <br />
+// // //           <b>Total:</b>{" "}
+// // //           <span className="text-green-700 font-bold">₹ {fees.total}</span>
+// // //         </div>
+
+// // //         <button
+// // //           type="submit"
+// // //           className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg"
+// // //         >
+// // //           Pay & Submit Application
+// // //         </button>
+// // //       </form>
+
+// // //       {/* Success Popup */}
+// // //       {showPopup && (
+// // //         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+// // //           <div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-sm w-full">
+// // //             <h3 className="text-xl font-bold text-green-600 mb-4">
+// // //               🎉 Payment Successful & Application Submitted!
+// // //             </h3>
+// // //             <p className="text-gray-600 mb-6">
+// // //               Your application has been submitted successfully after payment.
+// // //             </p>
+// // //             <button
+// // //               onClick={closePopupAndNavigate}
+// // //               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
 // // //             >
 // // //               Go to Dashboard
 // // //             </button>
@@ -147,413 +554,223 @@
 
 // // // export default ApplicationForm;
 
+// // // import { useEffect, useState } from "react";
+// // // import { useParams, useNavigate } from "react-router-dom";
+// // // import axios from "axios";
+// // // import { useAuth } from "../context/AuthContext";
+// // // import { io } from "socket.io-client";
+// // // import { createOrder, verifyPayment } from "../api/paymentApi"; // ✅ Payment API
 
+// // // const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+// // // const socket = io(BASE_URL); // 👈 connect once
 
+// // // const ApplicationForm = () => {
+// // //   const { serviceId } = useParams();
+// // //   const { user } = useAuth();
+// // //   const navigate = useNavigate();
 
+// // //   const [services, setServices] = useState([]);
+// // //   const [selectedService, setSelectedService] = useState(serviceId || "");
+// // //   const [subservices, setSubservices] = useState([]);
+// // //   const [selectedSubservice, setSelectedSubservice] = useState("");
+// // //   const [fees, setFees] = useState({ serviceFee: 0, platformFee: 0, total: 0 });
+// // //   const [userCaste, setUserCaste] = useState("");
+// // //   const [showPopup, setShowPopup] = useState(false);
 
+// // //   useEffect(() => {
+// // //     if (user?.token) {
+// // //       axios
+// // //         .get(`${BASE_URL}/api/users/me`, {
+// // //           headers: { Authorization: `Bearer ${user.token}` },
+// // //         })
+// // //         .then((res) => setUserCaste(res.data.caste || "General"))
+// // //         .catch((err) => console.error("Error fetching user caste:", err));
+// // //     }
+// // //   }, [user]);
 
-// // import { useEffect, useState } from "react";
-// // import { useParams, useNavigate } from "react-router-dom";
-// // import axios from "axios";
-// // import { useAuth } from "../context/AuthContext";
-// // import { io } from "socket.io-client";
-// // const BASE_URL = import.meta.env.VITE_BACKEND_URL;
+// // //   useEffect(() => {
+// // //     if (user?.token && userCaste) {
+// // //       axios
+// // //         .get(`${BASE_URL}/api/services`, {
+// // //           headers: { Authorization: `Bearer ${user.token}` },
+// // //         })
+// // //         .then((res) => {
+// // //           setServices(res.data);
+// // //           if (serviceId) handleServiceChange(serviceId, res.data, userCaste);
+// // //         })
+// // //         .catch((err) => console.error("Error fetching services:", err));
+// // //     }
+// // //   }, [user, userCaste]);
 
+// // //   const calculateFee = (service, casteValue = userCaste) => {
+// // //     if (!service?.fees) return 0;
+// // //     const casteKey = (casteValue || "General").toUpperCase();
+// // //     const matchingKey = Object.keys(service.fees).find(
+// // //       (key) => key.toUpperCase() === casteKey
+// // //     );
+// // //     return matchingKey ? service.fees[matchingKey] : service.fees.General || 0;
+// // //   };
 
-// // const socket = io(BASE_URL); // 👈 connect once
+// // //   const handleServiceChange = (serviceIdValue, serviceList = services, casteValue = userCaste) => {
+// // //     setSelectedService(serviceIdValue);
+// // //     setSelectedSubservice("");
+// // //     const service = serviceList.find((s) => s._id === serviceIdValue);
 
-// // const ApplicationForm = () => {
-// //   const { serviceId } = useParams();
-// // const { user } = useAuth();
-// //   const navigate = useNavigate();
+// // //     if (service) {
+// // //       setSubservices(service.subservices || []);
+// // //       const fee = calculateFee(service, casteValue);
+// // //       const platformFee = service.platformFee || 0;
+// // //       setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
+// // //     }
+// // //   };
 
-// //   const [services, setServices] = useState([]);
-// //   const [selectedService, setSelectedService] = useState(serviceId || "");
-// //   const [subservices, setSubservices] = useState([]);
-// //   const [selectedSubservice, setSelectedSubservice] = useState("");
-// //   const [fees, setFees] = useState({ serviceFee: 0, platformFee: 0, total: 0 });
-// //   const [userCaste, setUserCaste] = useState("");
-// //   const [showPopup, setShowPopup] = useState(false);
+// // //   const handleSubserviceChange = (subId) => {
+// // //     setSelectedSubservice(subId);
+// // //     const sub = subservices.find((s) => s._id === subId);
+// // //     const fee = calculateFee(sub);
+// // //     const platformFee = sub?.platformFee || 0;
+// // //     setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
+// // //   };
 
-// //   useEffect(() => {
-// //     if (user?.token) {
-// //       axios
-// //         .get(`${BASE_URL}/api/users/me`, {
-// //           headers: { Authorization: `Bearer ${user.token}` },
-// //         })
-// //         .then((res) => setUserCaste(res.data.caste || "General"))
-// //         .catch((err) => console.error("Error fetching user caste:", err));
-// //     }
-// //   }, [user]);
+// // //   // ✅ Application + Razorpay Payment Flow
+// // //   const handleSubmit = async (e) => {
+// // //     e.preventDefault();
+// // //     try {
+// // //       // Step 1: Draft Application create करा
+// // //       const res = await axios.post(
+// // //         `${BASE_URL}/api/applications/draft`,
+// // //         {
+// // //           serviceId: selectedService,
+// // //           subServiceId: selectedSubservice || null,
+// // //           userId: user.id,
+// // //         },
+// // //         { headers: { Authorization: `Bearer ${user.token}` } }
+// // //       );
 
-// //   useEffect(() => {
-// //     if (user?.token && userCaste) {
-// //       axios
-// //         .get(`${BASE_URL}/api/services`, {
-// //           headers: { Authorization: `Bearer ${user.token}` },
-// //         })
-// //         .then((res) => {
-// //           setServices(res.data);
-// //           if (serviceId) handleServiceChange(serviceId, res.data, userCaste);
-// //         })
-// //         .catch((err) => console.error("Error fetching services:", err));
-// //     }
-// //   }, [user, userCaste]);
+// // //       // ✅ Important Fix: applicationId आता योग्य मिळव
+// // //       const applicationId = res.data.application._id;
+// // //       console.log("💰 Total fees:", fees.total, "📄 ApplicationId:", applicationId);
 
-// //   const calculateFee = (service, casteValue = userCaste) => {
-// //     if (!service?.fees) return 0;
-// //     const casteKey = (casteValue || "General").toUpperCase();
-// //     const matchingKey = Object.keys(service.fees).find(
-// //       (key) => key.toUpperCase() === casteKey
-// //     );
-// //     return matchingKey ? service.fees[matchingKey] : service.fees.General || 0;
-// //   };
+// // //       // Step 2: Create Razorpay Order
+// // //       const order = await createOrder(fees.total, applicationId);
 
-// //   const handleServiceChange = (serviceIdValue, serviceList = services, casteValue = userCaste) => {
-// //     setSelectedService(serviceIdValue);
-// //     setSelectedSubservice("");
-// //     const service = serviceList.find((s) => s._id === serviceIdValue);
+// // //       // Step 3: Open Razorpay Checkout
+// // //       const options = {
+// // //         key: import.meta.env.VITE_RAZORPAY_KEY,
+// // //         amount: order.amount,
+// // //         currency: order.currency,
+// // //         order_id: order.orderId,
+// // //         name: "Maha e-Seva Portal",
+// // //         description: "Application Fee Payment",
+// // //         handler: async function (response) {
+// // //           // Step 4: Verify Payment
+// // //           await verifyPayment(
+// // //             applicationId,
+// // //             response.razorpay_order_id,
+// // //             response.razorpay_payment_id,
+// // //             response.razorpay_signature,
+// // //             fees.total
+// // //           );
 
-// //     if (service) {
-// //       setSubservices(service.subservices || []);
-// //       const fee = calculateFee(service, casteValue);
-// //       const platformFee = service.platformFee || 0; // 👈 take from DB
-// //       setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
-// //     }
-// //   };
+// // //           socket.emit("application:new", res.data.application);
+// // //           setShowPopup(true);
+// // //         },
+// // //         theme: { color: "#3399cc" },
+// // //       };
 
-// //   const handleSubserviceChange = (subId) => {
-// //     setSelectedSubservice(subId);
-// //     const sub = subservices.find((s) => s._id === subId);
-// //     const fee = calculateFee(sub);
-// //     const platformFee = sub?.platformFee || 0; // 👈 take from DB
-// //     setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
-// //   };
+// // //       const rzp = new window.Razorpay(options);
+// // //       rzp.open();
+// // //     } catch (err) {
+// // //       console.error("Error submitting application:", err);
+// // //       alert("❌ Submission or Payment failed");
+// // //     }
+// // //   };
 
-// //   const handleSubmit = async (e) => {
-// //     e.preventDefault();
-// //     try {
-// //       const res = await axios.post(
-// //         `${BASE_URL}/api/applications`,
-// //         {
-// //           serviceId: selectedService,
-// //           subServiceId: selectedSubservice || null,
-// //           userId: user.id,
-// //         },
-// //         { headers: { Authorization: `Bearer ${user.token}` } }
-// //       );
+// // //   const closePopupAndNavigate = () => {
+// // //     setShowPopup(false);
+// // //     navigate("/user/dashboard");
+// // //   };
 
-// //       // 👇 Emit event for realtime update
-// //       socket.emit("application:new", res.data.application);
+// // //   return (
+// // //     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
+// // //       <form
+// // //         onSubmit={handleSubmit}
+// // //         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md"
+// // //       >
+// // //         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+// // //           Apply for a Service
+// // //         </h2>
 
-// //       setShowPopup(true);
-// //     } catch (err) {
-// //       console.error("Error submitting application:", err);
-// //       alert("Submission failed");
-// //     }
-// //   };
+// // //         <select
+// // //           value={selectedService}
+// // //           onChange={(e) => handleServiceChange(e.target.value)}
+// // //           className="border border-gray-300 rounded-lg p-3 w-full"
+// // //           required
+// // //         >
+// // //           <option value="">-- Select Service --</option>
+// // //           {services.map((service) => (
+// // //             <option key={service._id} value={service._id}>
+// // //               {service.name}
+// // //             </option>
+// // //           ))}
+// // //         </select>
 
-// //   const closePopupAndNavigate = () => {
-// //     setShowPopup(false);
-// //     navigate("/user/dashboard");
-// //   };
+// // //         {subservices.length > 0 && (
+// // //           <select
+// // //             value={selectedSubservice}
+// // //             onChange={(e) => handleSubserviceChange(e.target.value)}
+// // //             className="mt-4 border border-gray-300 rounded-lg p-3 w-full"
+// // //           >
+// // //             <option value="">-- Select Subservice --</option>
+// // //             {subservices.map((sub) => (
+// // //               <option key={sub._id} value={sub._id}>
+// // //                 {sub.name}
+// // //               </option>
+// // //             ))}
+// // //           </select>
+// // //         )}
 
-// //   return (
-// //     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
-// //       <form
-// //         onSubmit={handleSubmit}
-// //         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md"
-// //       >
-// //         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-// //           Apply for a Service
-// //         </h2>
+// // //         <div className="mt-4 text-lg text-gray-700">
+// // //           <b>Service Fee:</b> ₹ {fees.serviceFee}
+// // //           <br />
+// // //           <b>Platform Fee:</b> ₹ {fees.platformFee}
+// // //           <br />
+// // //           <b>Total:</b>{" "}
+// // //           <span className="text-green-700 font-bold">₹ {fees.total}</span>
+// // //         </div>
 
-// //         <select
-// //           value={selectedService}
-// //           onChange={(e) => handleServiceChange(e.target.value)}
-// //           className="border border-gray-300 rounded-lg p-3 w-full"
-// //           required
-// //         >
-// //           <option value="">-- Select Service --</option>
-// //           {services.map((service) => (
-// //             <option key={service._id} value={service._id}>
-// //               {service.name}
-// //             </option>
-// //           ))}
-// //         </select>
+// // //         <button
+// // //           type="submit"
+// // //           className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg"
+// // //         >
+// // //           Pay & Submit Application
+// // //         </button>
+// // //       </form>
 
-// //         {subservices.length > 0 && (
-// //           <select
-// //             value={selectedSubservice}
-// //             onChange={(e) => handleSubserviceChange(e.target.value)}
-// //             className="mt-4 border border-gray-300 rounded-lg p-3 w-full"
-// //           >
-// //             <option value="">-- Select Subservice --</option>
-// //             {subservices.map((sub) => (
-// //               <option key={sub._id} value={sub._id}>
-// //                 {sub.name}
-// //               </option>
-// //             ))}
-// //           </select>
-// //         )}
+// // //       {/* Success Popup */}
+// // //       {showPopup && (
+// // //         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+// // //           <div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-sm w-full">
+// // //             <h3 className="text-xl font-bold text-green-600 mb-4">
+// // //               🎉 Payment Successful & Application Submitted!
+// // //             </h3>
+// // //             <p className="text-gray-600 mb-6">
+// // //               Your application has been submitted successfully after payment.
+// // //             </p>
+// // //             <button
+// // //               onClick={closePopupAndNavigate}
+// // //               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+// // //             >
+// // //               Go to Dashboard
+// // //             </button>
+// // //           </div>
+// // //         </div>
+// // //       )}
+// // //     </div>
+// // //   );
+// // // };
 
-// //         <div className="mt-4 text-lg text-gray-700">
-// //           <b>Service Fee:</b> ₹ {fees.serviceFee}
-// //           <br />
-// //           <b>Platform Fee:</b> ₹ {fees.platformFee}
-// //           <br />
-// //           <b>Total:</b>{" "}
-// //           <span className="text-green-700 font-bold">₹ {fees.total}</span>
-// //         </div>
-
-// //         <button
-// //           type="submit"
-// //           className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg"
-// //         >
-// //           Submit Application
-// //         </button>
-// //       </form>
-
-// //       {/* Success Popup */}
-// //       {showPopup && (
-// //         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-// //           <div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-sm w-full">
-// //             <h3 className="text-xl font-bold text-green-600 mb-4">
-// //               🎉 Application Submitted Successfully!
-// //             </h3>
-// //             <p className="text-gray-600 mb-6">
-// //               Your application has been submitted successfully.
-// //             </p>
-// //             <button
-// //               onClick={closePopupAndNavigate}
-// //               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
-// //             >
-// //               Go to Dashboard
-// //             </button>
-// //           </div>
-// //         </div>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default ApplicationForm;
-// // import { useEffect, useState } from "react";
-// // import { useParams, useNavigate } from "react-router-dom";
-// // import axios from "axios";
-// // import { useAuth } from "../context/AuthContext";
-// // import { io } from "socket.io-client";
-// // import { createOrder, verifyPayment } from "../api/paymentApi"; // ✅ Payment API
-// // const BASE_URL = import.meta.env.VITE_BACKEND_URL;
-
-// // const socket = io(BASE_URL); // 👈 connect once
-
-// // const ApplicationForm = () => {
-// //   const { serviceId } = useParams();
-// //   const { user } = useAuth();
-// //   const navigate = useNavigate();
-
-// //   const [services, setServices] = useState([]);
-// //   const [selectedService, setSelectedService] = useState(serviceId || "");
-// //   const [subservices, setSubservices] = useState([]);
-// //   const [selectedSubservice, setSelectedSubservice] = useState("");
-// //   const [fees, setFees] = useState({ serviceFee: 0, platformFee: 0, total: 0 });
-// //   const [userCaste, setUserCaste] = useState("");
-// //   const [showPopup, setShowPopup] = useState(false);
-
-// //   useEffect(() => {
-// //     if (user?.token) {
-// //       axios
-// //         .get(`${BASE_URL}/api/users/me`, {
-// //           headers: { Authorization: `Bearer ${user.token}` },
-// //         })
-// //         .then((res) => setUserCaste(res.data.caste || "General"))
-// //         .catch((err) => console.error("Error fetching user caste:", err));
-// //     }
-// //   }, [user]);
-
-// //   useEffect(() => {
-// //     if (user?.token && userCaste) {
-// //       axios
-// //         .get(`${BASE_URL}/api/services`, {
-// //           headers: { Authorization: `Bearer ${user.token}` },
-// //         })
-// //         .then((res) => {
-// //           setServices(res.data);
-// //           if (serviceId) handleServiceChange(serviceId, res.data, userCaste);
-// //         })
-// //         .catch((err) => console.error("Error fetching services:", err));
-// //     }
-// //   }, [user, userCaste]);
-
-// //   const calculateFee = (service, casteValue = userCaste) => {
-// //     if (!service?.fees) return 0;
-// //     const casteKey = (casteValue || "General").toUpperCase();
-// //     const matchingKey = Object.keys(service.fees).find(
-// //       (key) => key.toUpperCase() === casteKey
-// //     );
-// //     return matchingKey ? service.fees[matchingKey] : service.fees.General || 0;
-// //   };
-
-// //   const handleServiceChange = (serviceIdValue, serviceList = services, casteValue = userCaste) => {
-// //     setSelectedService(serviceIdValue);
-// //     setSelectedSubservice("");
-// //     const service = serviceList.find((s) => s._id === serviceIdValue);
-
-// //     if (service) {
-// //       setSubservices(service.subservices || []);
-// //       const fee = calculateFee(service, casteValue);
-// //       const platformFee = service.platformFee || 0; // 👈 from DB
-// //       setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
-// //     }
-// //   };
-
-// //   const handleSubserviceChange = (subId) => {
-// //     setSelectedSubservice(subId);
-// //     const sub = subservices.find((s) => s._id === subId);
-// //     const fee = calculateFee(sub);
-// //     const platformFee = sub?.platformFee || 0; // 👈 from DB
-// //     setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
-// //   };
-
-// //   // ✅ Application + Razorpay Payment Flow
-// //   const handleSubmit = async (e) => {
-// //     e.preventDefault();
-// //     try {
-// //       // Step 1: Draft Application create करा
-// //       const res = await axios.post(
-// //         `${BASE_URL}/api/applications/draft`,
-// //         {
-// //           serviceId: selectedService,
-// //           subServiceId: selectedSubservice || null,
-// //           userId: user.id,
-// //         },
-// //         { headers: { Authorization: `Bearer ${user.token}` } }
-// //       );
-
-// //       const applicationId = res.data._id;
-
-// //       // Step 2: Create Razorpay Order
-// //       const order = await createOrder(fees.total, applicationId);
-
-// //       // Step 3: Open Razorpay Checkout
-// //       const options = {
-// //         key: import.meta.env.VITE_RAZORPAY_KEY,
-// //         amount: order.amount,
-// //         currency: order.currency,
-// //         order_id: order.orderId,
-// //         name: "Maha e-Seva Portal",
-// //         description: "Application Fee Payment",
-// //         handler: async function (response) {
-// //           // Step 4: Verify Payment
-// //           await verifyPayment(
-// //             applicationId,
-// //             response.razorpay_order_id,
-// //             response.razorpay_payment_id,
-// //             response.razorpay_signature,
-// //             fees.total
-// //           );
-
-// //           socket.emit("application:new", res.data.application);
-// //           setShowPopup(true);
-// //         },
-// //         theme: { color: "#3399cc" },
-// //       };
-
-// //       const rzp = new window.Razorpay(options);
-// //       rzp.open();
-// //     } catch (err) {
-// //       console.error("Error submitting application:", err);
-// //       alert("❌ Submission or Payment failed");
-// //     }
-// //   };
-
-// //   const closePopupAndNavigate = () => {
-// //     setShowPopup(false);
-// //     navigate("/user/dashboard");
-// //   };
-
-// //   return (
-// //     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
-// //       <form
-// //         onSubmit={handleSubmit}
-// //         className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md"
-// //       >
-// //         <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-// //           Apply for a Service
-// //         </h2>
-
-// //         <select
-// //           value={selectedService}
-// //           onChange={(e) => handleServiceChange(e.target.value)}
-// //           className="border border-gray-300 rounded-lg p-3 w-full"
-// //           required
-// //         >
-// //           <option value="">-- Select Service --</option>
-// //           {services.map((service) => (
-// //             <option key={service._id} value={service._id}>
-// //               {service.name}
-// //             </option>
-// //           ))}
-// //         </select>
-
-// //         {subservices.length > 0 && (
-// //           <select
-// //             value={selectedSubservice}
-// //             onChange={(e) => handleSubserviceChange(e.target.value)}
-// //             className="mt-4 border border-gray-300 rounded-lg p-3 w-full"
-// //           >
-// //             <option value="">-- Select Subservice --</option>
-// //             {subservices.map((sub) => (
-// //               <option key={sub._id} value={sub._id}>
-// //                 {sub.name}
-// //               </option>
-// //             ))}
-// //           </select>
-// //         )}
-
-// //         <div className="mt-4 text-lg text-gray-700">
-// //           <b>Service Fee:</b> ₹ {fees.serviceFee}
-// //           <br />
-// //           <b>Platform Fee:</b> ₹ {fees.platformFee}
-// //           <br />
-// //           <b>Total:</b>{" "}
-// //           <span className="text-green-700 font-bold">₹ {fees.total}</span>
-// //         </div>
-
-// //         <button
-// //           type="submit"
-// //           className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg"
-// //         >
-// //           Pay & Submit Application
-// //         </button>
-// //       </form>
-
-// //       {/* Success Popup */}
-// //       {showPopup && (
-// //         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-// //           <div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-sm w-full">
-// //             <h3 className="text-xl font-bold text-green-600 mb-4">
-// //               🎉 Payment Successful & Application Submitted!
-// //             </h3>
-// //             <p className="text-gray-600 mb-6">
-// //               Your application has been submitted successfully after payment.
-// //             </p>
-// //             <button
-// //               onClick={closePopupAndNavigate}
-// //               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
-// //             >
-// //               Go to Dashboard
-// //             </button>
-// //           </div>
-// //         </div>
-// //       )}
-// //     </div>
-// //   );
-// // };
-
-// // export default ApplicationForm;
-
+// // // export default ApplicationForm;
 // // import { useEffect, useState } from "react";
 // // import { useParams, useNavigate } from "react-router-dom";
 // // import axios from "axios";
@@ -571,12 +788,15 @@
 
 // //   const [services, setServices] = useState([]);
 // //   const [selectedService, setSelectedService] = useState(serviceId || "");
-// //   const [subservices, setSubservices] = useState([]);
+// //   // const [subservices, setSubservices] = useState([]);
+// //     const [subservices, setSubservices] = useState([]);
+
 // //   const [selectedSubservice, setSelectedSubservice] = useState("");
 // //   const [fees, setFees] = useState({ serviceFee: 0, platformFee: 0, total: 0 });
 // //   const [userCaste, setUserCaste] = useState("");
 // //   const [showPopup, setShowPopup] = useState(false);
 
+// //   // ✅ User caste fetch
 // //   useEffect(() => {
 // //     if (user?.token) {
 // //       axios
@@ -588,6 +808,7 @@
 // //     }
 // //   }, [user]);
 
+// //   // ✅ Services fetch
 // //   useEffect(() => {
 // //     if (user?.token && userCaste) {
 // //       axios
@@ -601,7 +822,23 @@
 // //         .catch((err) => console.error("Error fetching services:", err));
 // //     }
 // //   }, [user, userCaste]);
+// //   useEffect(() => {
+// //   const script = document.createElement("script");
+// //   script.src = "https://checkout.razorpay.com/v1/checkout.js";
+// //   script.async = true;
+// //   document.body.appendChild(script);
 
+// //   script.onload = () => {
+// //     console.log("✅ Razorpay SDK loaded");
+// //   };
+
+// //   return () => {
+// //     document.body.removeChild(script);
+// //   };
+// // }, []);
+
+
+// //   // ✅ Fee Calculation
 // //   const calculateFee = (service, casteValue = userCaste) => {
 // //     if (!service?.fees) return 0;
 // //     const casteKey = (casteValue || "General").toUpperCase();
@@ -636,47 +873,85 @@
 // //   const handleSubmit = async (e) => {
 // //     e.preventDefault();
 // //     try {
-// //       // Step 1: Draft Application create करा
-// //       const res = await axios.post(
-// //         `${BASE_URL}/api/applications/draft`,
-// //         {
-// //           serviceId: selectedService,
-// //           subServiceId: selectedSubservice || null,
-// //           userId: user.id,
-// //         },
-// //         { headers: { Authorization: `Bearer ${user.token}` } }
-// //       );
+// //       // Step 1: Draft Application create
+// //       const sub = subservices.find((s) => s._id === selectedSubservice);
+// //       const res = await axios.post(`${BASE_URL}/api/applications/draft`, {
+// //   serviceId: selectedService,
+// //   subService: sub ? { _id: sub._id, name: sub.name } : null,  // ✅ पूर्ण object
+// //   userId: user.id,
+// // }, { headers: { Authorization: `Bearer ${user.token}` } });
+// //       // await axios.post(
+// //       //   `${BASE_URL}/api/applications/draft`,
+// //       //   {
+// //       //     serviceId: selectedService,
+// //       //     subServiceId: selectedSubservice || null,
+// //       //     userId: user.id,
+// //       //   },
+// //       //   { headers: { Authorization: `Bearer ${user.token}` } }
+// //       // );
 
-// //       // ✅ Important Fix: applicationId आता योग्य मिळव
 // //       const applicationId = res.data.application._id;
 // //       console.log("💰 Total fees:", fees.total, "📄 ApplicationId:", applicationId);
 
 // //       // Step 2: Create Razorpay Order
 // //       const order = await createOrder(fees.total, applicationId);
 
-// //       // Step 3: Open Razorpay Checkout
-// //       const options = {
-// //         key: import.meta.env.VITE_RAZORPAY_KEY,
-// //         amount: order.amount,
-// //         currency: order.currency,
-// //         order_id: order.orderId,
-// //         name: "Maha e-Seva Portal",
-// //         description: "Application Fee Payment",
-// //         handler: async function (response) {
-// //           // Step 4: Verify Payment
-// //           await verifyPayment(
-// //             applicationId,
-// //             response.razorpay_order_id,
-// //             response.razorpay_payment_id,
-// //             response.razorpay_signature,
-// //             fees.total
-// //           );
+// //       // ✅ Check if Razorpay script loaded
+// //       if (!window.Razorpay) {
+// //         alert("❌ Razorpay SDK failed to load. Please refresh the page.");
+// //         return;
+// //       }
 
-// //           socket.emit("application:new", res.data.application);
-// //           setShowPopup(true);
-// //         },
-// //         theme: { color: "#3399cc" },
-// //       };
+// //       // Step 3: Open Razorpay Checkout
+// //       // const options = {
+// //       //   key: import.meta.env.VITE_RAZORPAY_KEY,
+// //       //   amount: order.amount,
+// //       //   currency: order.currency,
+// //       //   order_id: order.orderId,
+// //       //   name: "Maha e-Seva Portal",
+// //       //   description: "Application Fee Payment",
+// //       //   handler: async function (response) {
+// //       //     // Step 4: Verify Payment
+// //       //     await verifyPayment(
+// //       //       applicationId,
+// //       //       response.razorpay_order_id,
+// //       //       response.razorpay_payment_id,
+// //       //       response.razorpay_signature,
+// //       //       fees.total
+// //       //     );
+
+// //       //     socket.emit("application:new", res.data.application);
+// //       //     setShowPopup(true);
+// //       //   },
+// //       //   theme: { color: "#3399cc" },
+// //       // };
+// // const options = {
+// //   key: import.meta.env.VITE_RAZORPAY_KEY,
+// //   amount: order.amount,
+// //   currency: order.currency,
+// //   order_id: order.orderId,
+// //   name: "Maha e-Seva Portal",
+// //   description: "Application Fee Payment",
+// //   handler: async function (response) {
+// //     await verifyPayment(
+// //       applicationId,
+// //       response.razorpay_order_id,
+// //       response.razorpay_payment_id,
+// //       response.razorpay_signature,
+// //       fees.total
+// //     );
+// //     socket.emit("application:new", res.data.application);
+// //     setShowPopup(true);
+// //   },
+// //   theme: { color: "#3399cc" },
+// //   // 👇 optional, force enable UPI by default
+// //   method: {
+// //     upi: true,   // ✅ UPI allowed
+// //     card: true,  // ✅ Card allowed
+// //     netbanking: true,
+// //     wallet: true,
+// //   },
+// // };
 
 // //       const rzp = new window.Razorpay(options);
 // //       rzp.open();
@@ -771,15 +1046,20 @@
 // // };
 
 // // export default ApplicationForm;
+
+
+
+
+
+
 // import { useEffect, useState } from "react";
 // import { useParams, useNavigate } from "react-router-dom";
 // import axios from "axios";
 // import { useAuth } from "../context/AuthContext";
-// import { io } from "socket.io-client";
 // import { createOrder, verifyPayment } from "../api/paymentApi"; // ✅ Payment API
+// import { initSocket } from "../socket";
 
 // const BASE_URL = import.meta.env.VITE_BACKEND_URL;
-// const socket = io(BASE_URL); // 👈 connect once
 
 // const ApplicationForm = () => {
 //   const { serviceId } = useParams();
@@ -788,9 +1068,7 @@
 
 //   const [services, setServices] = useState([]);
 //   const [selectedService, setSelectedService] = useState(serviceId || "");
-//   // const [subservices, setSubservices] = useState([]);
-//     const [subservices, setSubservices] = useState([]);
-
+//   const [subservices, setSubservices] = useState([]);
 //   const [selectedSubservice, setSelectedSubservice] = useState("");
 //   const [fees, setFees] = useState({ serviceFee: 0, platformFee: 0, total: 0 });
 //   const [userCaste, setUserCaste] = useState("");
@@ -822,21 +1100,22 @@
 //         .catch((err) => console.error("Error fetching services:", err));
 //     }
 //   }, [user, userCaste]);
+
+//   // ✅ Razorpay script load
 //   useEffect(() => {
-//   const script = document.createElement("script");
-//   script.src = "https://checkout.razorpay.com/v1/checkout.js";
-//   script.async = true;
-//   document.body.appendChild(script);
+//     const script = document.createElement("script");
+//     script.src = "https://checkout.razorpay.com/v1/checkout.js";
+//     script.async = true;
+//     document.body.appendChild(script);
 
-//   script.onload = () => {
-//     console.log("✅ Razorpay SDK loaded");
-//   };
+//     script.onload = () => {
+//       console.log("✅ Razorpay SDK loaded");
+//     };
 
-//   return () => {
-//     document.body.removeChild(script);
-//   };
-// }, []);
-
+//     return () => {
+//       document.body.removeChild(script);
+//     };
+//   }, []);
 
 //   // ✅ Fee Calculation
 //   const calculateFee = (service, casteValue = userCaste) => {
@@ -848,7 +1127,11 @@
 //     return matchingKey ? service.fees[matchingKey] : service.fees.General || 0;
 //   };
 
-//   const handleServiceChange = (serviceIdValue, serviceList = services, casteValue = userCaste) => {
+//   const handleServiceChange = (
+//     serviceIdValue,
+//     serviceList = services,
+//     casteValue = userCaste
+//   ) => {
 //     setSelectedService(serviceIdValue);
 //     setSelectedSubservice("");
 //     const service = serviceList.find((s) => s._id === serviceIdValue);
@@ -875,23 +1158,23 @@
 //     try {
 //       // Step 1: Draft Application create
 //       const sub = subservices.find((s) => s._id === selectedSubservice);
-//       const res = await axios.post(`${BASE_URL}/api/applications/draft`, {
-//   serviceId: selectedService,
-//   subService: sub ? { _id: sub._id, name: sub.name } : null,  // ✅ पूर्ण object
-//   userId: user.id,
-// }, { headers: { Authorization: `Bearer ${user.token}` } });
-//       // await axios.post(
-//       //   `${BASE_URL}/api/applications/draft`,
-//       //   {
-//       //     serviceId: selectedService,
-//       //     subServiceId: selectedSubservice || null,
-//       //     userId: user.id,
-//       //   },
-//       //   { headers: { Authorization: `Bearer ${user.token}` } }
-//       // );
+//       const res = await axios.post(
+//         `${BASE_URL}/api/applications/draft`,
+//         {
+//           serviceId: selectedService,
+//           subService: sub ? { _id: sub._id, name: sub.name } : null, // ✅ पूर्ण object
+//           userId: user.id,
+//         },
+//         { headers: { Authorization: `Bearer ${user.token}` } }
+//       );
 
 //       const applicationId = res.data.application._id;
-//       console.log("💰 Total fees:", fees.total, "📄 ApplicationId:", applicationId);
+//       console.log(
+//         "💰 Total fees:",
+//         fees.total,
+//         "📄 ApplicationId:",
+//         applicationId
+//       );
 
 //       // Step 2: Create Razorpay Order
 //       const order = await createOrder(fees.total, applicationId);
@@ -903,55 +1186,34 @@
 //       }
 
 //       // Step 3: Open Razorpay Checkout
-//       // const options = {
-//       //   key: import.meta.env.VITE_RAZORPAY_KEY,
-//       //   amount: order.amount,
-//       //   currency: order.currency,
-//       //   order_id: order.orderId,
-//       //   name: "Maha e-Seva Portal",
-//       //   description: "Application Fee Payment",
-//       //   handler: async function (response) {
-//       //     // Step 4: Verify Payment
-//       //     await verifyPayment(
-//       //       applicationId,
-//       //       response.razorpay_order_id,
-//       //       response.razorpay_payment_id,
-//       //       response.razorpay_signature,
-//       //       fees.total
-//       //     );
+//       const options = {
+//         key: import.meta.env.VITE_RAZORPAY_KEY,
+//         amount: order.amount,
+//         currency: order.currency,
+//         order_id: order.orderId,
+//         name: "Maha e-Seva Portal",
+//         description: "Application Fee Payment",
+//         handler: async function (response) {
+//           // Step 4: Verify Payment
+//           await verifyPayment(
+//             applicationId,
+//             response.razorpay_order_id,
+//             response.razorpay_payment_id,
+//             response.razorpay_signature,
+//             fees.total
+//           );
 
-//       //     socket.emit("application:new", res.data.application);
-//       //     setShowPopup(true);
-//       //   },
-//       //   theme: { color: "#3399cc" },
-//       // };
-// const options = {
-//   key: import.meta.env.VITE_RAZORPAY_KEY,
-//   amount: order.amount,
-//   currency: order.currency,
-//   order_id: order.orderId,
-//   name: "Maha e-Seva Portal",
-//   description: "Application Fee Payment",
-//   handler: async function (response) {
-//     await verifyPayment(
-//       applicationId,
-//       response.razorpay_order_id,
-//       response.razorpay_payment_id,
-//       response.razorpay_signature,
-//       fees.total
-//     );
-//     socket.emit("application:new", res.data.application);
-//     setShowPopup(true);
-//   },
-//   theme: { color: "#3399cc" },
-//   // 👇 optional, force enable UPI by default
-//   method: {
-//     upi: true,   // ✅ UPI allowed
-//     card: true,  // ✅ Card allowed
-//     netbanking: true,
-//     wallet: true,
-//   },
-// };
+//           // ❌ socket.emit काढलं कारण server स्वतः emit करतो
+//           setShowPopup(true);
+//         },
+//         theme: { color: "#3399cc" },
+//         method: {
+//           upi: true,
+//           card: true,
+//           netbanking: true,
+//           wallet: true,
+//         },
+//       };
 
 //       const rzp = new window.Razorpay(options);
 //       rzp.open();
@@ -1048,16 +1310,13 @@
 // export default ApplicationForm;
 
 
-
-
-
-
+// client/src/pages/ApplicationForm.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import { createOrder, verifyPayment } from "../api/paymentApi"; // ✅ Payment API
-import { initSocket } from "../socket";
+import { createOrder, verifyPayment } from "../api/paymentApi";
+import { initSocket, getSocket } from "../socket";
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -1074,25 +1333,19 @@ const ApplicationForm = () => {
   const [userCaste, setUserCaste] = useState("");
   const [showPopup, setShowPopup] = useState(false);
 
-  // ✅ User caste fetch
   useEffect(() => {
     if (user?.token) {
       axios
-        .get(`${BASE_URL}/api/users/me`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        })
+        .get(`${BASE_URL}/api/users/me`, { headers: { Authorization: `Bearer ${user.token}` } })
         .then((res) => setUserCaste(res.data.caste || "General"))
         .catch((err) => console.error("Error fetching user caste:", err));
     }
   }, [user]);
 
-  // ✅ Services fetch
   useEffect(() => {
     if (user?.token && userCaste) {
       axios
-        .get(`${BASE_URL}/api/services`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        })
+        .get(`${BASE_URL}/api/services`, { headers: { Authorization: `Bearer ${user.token}` } })
         .then((res) => {
           setServices(res.data);
           if (serviceId) handleServiceChange(serviceId, res.data, userCaste);
@@ -1101,41 +1354,38 @@ const ApplicationForm = () => {
     }
   }, [user, userCaste]);
 
-  // ✅ Razorpay script load
+  // load Razorpay SDK
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
     document.body.appendChild(script);
-
-    script.onload = () => {
-      console.log("✅ Razorpay SDK loaded");
-    };
-
+    script.onload = () => console.log("Razorpay SDK loaded");
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
-  // ✅ Fee Calculation
+  // init socket (auth) so that client can receive server emits if needed
+  useEffect(() => {
+    initSocket(user?.token);
+    return () => {
+      // do not disconnect here to keep singleton for other pages;
+      // components that want full disconnect can call disconnectSocket()
+    };
+  }, [user?.token]);
+
   const calculateFee = (service, casteValue = userCaste) => {
     if (!service?.fees) return 0;
     const casteKey = (casteValue || "General").toUpperCase();
-    const matchingKey = Object.keys(service.fees).find(
-      (key) => key.toUpperCase() === casteKey
-    );
+    const matchingKey = Object.keys(service.fees).find((key) => key.toUpperCase() === casteKey);
     return matchingKey ? service.fees[matchingKey] : service.fees.General || 0;
   };
 
-  const handleServiceChange = (
-    serviceIdValue,
-    serviceList = services,
-    casteValue = userCaste
-  ) => {
+  const handleServiceChange = (serviceIdValue, serviceList = services, casteValue = userCaste) => {
     setSelectedService(serviceIdValue);
     setSelectedSubservice("");
     const service = serviceList.find((s) => s._id === serviceIdValue);
-
     if (service) {
       setSubservices(service.subservices || []);
       const fee = calculateFee(service, casteValue);
@@ -1152,40 +1402,28 @@ const ApplicationForm = () => {
     setFees({ serviceFee: fee, platformFee, total: fee + platformFee });
   };
 
-  // ✅ Application + Razorpay Payment Flow
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Step 1: Draft Application create
       const sub = subservices.find((s) => s._id === selectedSubservice);
       const res = await axios.post(
         `${BASE_URL}/api/applications/draft`,
         {
           serviceId: selectedService,
-          subService: sub ? { _id: sub._id, name: sub.name } : null, // ✅ पूर्ण object
+          subService: sub ? { _id: sub._id, name: sub.name } : null,
           userId: user.id,
         },
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
 
       const applicationId = res.data.application._id;
-      console.log(
-        "💰 Total fees:",
-        fees.total,
-        "📄 ApplicationId:",
-        applicationId
-      );
-
-      // Step 2: Create Razorpay Order
       const order = await createOrder(fees.total, applicationId);
 
-      // ✅ Check if Razorpay script loaded
       if (!window.Razorpay) {
-        alert("❌ Razorpay SDK failed to load. Please refresh the page.");
+        alert("Razorpay SDK failed to load. Please refresh the page.");
         return;
       }
 
-      // Step 3: Open Razorpay Checkout
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY,
         amount: order.amount,
@@ -1194,7 +1432,7 @@ const ApplicationForm = () => {
         name: "Maha e-Seva Portal",
         description: "Application Fee Payment",
         handler: async function (response) {
-          // Step 4: Verify Payment
+          // server payment verify will emit "applicationCreated" after updating DB.
           await verifyPayment(
             applicationId,
             response.razorpay_order_id,
@@ -1202,24 +1440,18 @@ const ApplicationForm = () => {
             response.razorpay_signature,
             fees.total
           );
-
-          // ❌ socket.emit काढलं कारण server स्वतः emit करतो
+          // No custom socket emit here — server emits the canonical "applicationCreated".
           setShowPopup(true);
         },
         theme: { color: "#3399cc" },
-        method: {
-          upi: true,
-          card: true,
-          netbanking: true,
-          wallet: true,
-        },
+        method: { upi: true, card: true, netbanking: true, wallet: true },
       };
 
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (err) {
       console.error("Error submitting application:", err);
-      alert("❌ Submission or Payment failed");
+      alert("Submission or Payment failed");
     }
   };
 
@@ -1230,20 +1462,10 @@ const ApplicationForm = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-6">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          Apply for a Service
-        </h2>
+      <form onSubmit={handleSubmit} className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Apply for a Service</h2>
 
-        <select
-          value={selectedService}
-          onChange={(e) => handleServiceChange(e.target.value)}
-          className="border border-gray-300 rounded-lg p-3 w-full"
-          required
-        >
+        <select value={selectedService} onChange={(e) => handleServiceChange(e.target.value)} className="border border-gray-300 rounded-lg p-3 w-full" required>
           <option value="">-- Select Service --</option>
           {services.map((service) => (
             <option key={service._id} value={service._id}>
@@ -1253,11 +1475,7 @@ const ApplicationForm = () => {
         </select>
 
         {subservices.length > 0 && (
-          <select
-            value={selectedSubservice}
-            onChange={(e) => handleSubserviceChange(e.target.value)}
-            className="mt-4 border border-gray-300 rounded-lg p-3 w-full"
-          >
+          <select value={selectedSubservice} onChange={(e) => handleSubserviceChange(e.target.value)} className="mt-4 border border-gray-300 rounded-lg p-3 w-full">
             <option value="">-- Select Subservice --</option>
             {subservices.map((sub) => (
               <option key={sub._id} value={sub._id}>
@@ -1276,28 +1494,17 @@ const ApplicationForm = () => {
           <span className="text-green-700 font-bold">₹ {fees.total}</span>
         </div>
 
-        <button
-          type="submit"
-          className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg"
-        >
+        <button type="submit" className="mt-6 w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg">
           Pay & Submit Application
         </button>
       </form>
 
-      {/* Success Popup */}
       {showPopup && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl text-center max-w-sm w-full">
-            <h3 className="text-xl font-bold text-green-600 mb-4">
-              🎉 Payment Successful & Application Submitted!
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Your application has been submitted successfully after payment.
-            </p>
-            <button
-              onClick={closePopupAndNavigate}
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
-            >
+            <h3 className="text-xl font-bold text-green-600 mb-4">Payment Successful & Application Submitted!</h3>
+            <p className="text-gray-600 mb-6">Your application has been submitted successfully after payment.</p>
+            <button onClick={closePopupAndNavigate} className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg">
               Go to Dashboard
             </button>
           </div>
