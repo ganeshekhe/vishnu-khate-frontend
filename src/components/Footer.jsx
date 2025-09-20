@@ -1,5 +1,6 @@
 
 
+
 // import React from "react";
 // import {
 //   FaFacebookF,
@@ -8,16 +9,17 @@
 //   FaPhoneAlt,
 //   FaEnvelope,
 //   FaMapMarkerAlt,
+//   FaWhatsapp,
 // } from "react-icons/fa";
 
 // const Footer = () => {
 //   return (
 //     <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-200 mt-16 shadow-inner">
 //       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 animate-fadeIn">
-
+        
 //         {/* Column 1 - Logo & About */}
 //         <div>
-//           <h2 className="text-3xl font-bold text-pink-500 mb-4 tracking-wide">CEP</h2>
+//           <h2 className="text-3xl font-extrabold text-pink-500 mb-4 tracking-wide">CEP</h2>
 //           <p className="text-sm leading-relaxed text-gray-300">
 //             All government services in one place. Fill out applications, upload documents and get certificates – all from the comfort of your home.
 //           </p>
@@ -25,7 +27,9 @@
 
 //         {/* Column 2 - Useful Links */}
 //         <div>
-//           <h3 className="text-xl font-semibold text-white mb-4 border-b border-pink-500 pb-1">Quick Links</h3>
+//           <h3 className="text-xl font-semibold text-white mb-4 border-b border-pink-500 pb-1">
+//             Quick Links
+//           </h3>
 //           <ul className="space-y-3 text-sm text-gray-300">
 //             {[
 //               { label: "🏠 Home", href: "/" },
@@ -47,7 +51,9 @@
 
 //         {/* Column 3 - Contact & Social */}
 //         <div>
-//           <h3 className="text-xl font-semibold text-white mb-4 border-b border-pink-500 pb-1">Contact Us</h3>
+//           <h3 className="text-xl font-semibold text-white mb-4 border-b border-pink-500 pb-1">
+//             Contact Us
+//           </h3>
 //           <ul className="space-y-3 text-sm text-gray-300">
 //             <li className="flex items-start gap-2">
 //               <FaMapMarkerAlt className="text-pink-400 mt-1" />
@@ -72,6 +78,7 @@
 //             </li>
 //           </ul>
 
+//           {/* Social Icons */}
 //           <div className="flex gap-4 mt-6">
 //             {[FaFacebookF, FaTwitter, FaLinkedinIn].map((Icon, idx) => (
 //               <a
@@ -82,10 +89,21 @@
 //                 <Icon size={16} />
 //               </a>
 //             ))}
+
+//             {/* WhatsApp Icon */}
+//             <a
+//               href="https://wa.me/919322945038?text=Hello%20CEP%20Team%2C%20I%20need%20assistance."
+//               target="_blank"
+//               rel="noopener noreferrer"
+//               className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all duration-300 shadow-md"
+//             >
+//               <FaWhatsapp size={18} />
+//             </a>
 //           </div>
 //         </div>
 //       </div>
 
+//       {/* Bottom Bar */}
 //       <div className="text-center py-4 text-sm text-gray-400 border-t border-gray-700 mt-10">
 //         © {new Date().getFullYear()} Ganesh Ekhe. All rights reserved.
 //       </div>
@@ -94,8 +112,6 @@
 // };
 
 // export default Footer;
-
-
 import React from "react";
 import {
   FaFacebookF,
@@ -109,23 +125,23 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-black text-gray-200 mt-16 shadow-inner">
+    <footer className="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 text-gray-900 mt-16 shadow-inner">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 animate-fadeIn">
         
         {/* Column 1 - Logo & About */}
-        <div>
-          <h2 className="text-3xl font-extrabold text-pink-500 mb-4 tracking-wide">CEP</h2>
-          <p className="text-sm leading-relaxed text-gray-300">
-            All government services in one place. Fill out applications, upload documents and get certificates – all from the comfort of your home.
+        <div className="animate-fadeIn delay-100">
+          <h2 className="text-3xl font-extrabold text-purple-700 mb-4 tracking-wide">CEP</h2>
+          <p className="text-sm leading-relaxed text-gray-800">
+            All government services in one place. Fill out applications, upload documents, and get certificates – all from the comfort of your home.
           </p>
         </div>
 
         {/* Column 2 - Useful Links */}
-        <div>
-          <h3 className="text-xl font-semibold text-white mb-4 border-b border-pink-500 pb-1">
+        <div className="animate-fadeIn delay-200">
+          <h3 className="text-xl font-semibold text-purple-900 mb-4 border-b border-purple-700 pb-1">
             Quick Links
           </h3>
-          <ul className="space-y-3 text-sm text-gray-300">
+          <ul className="space-y-3 text-sm text-gray-800">
             {[
               { label: "🏠 Home", href: "/" },
               { label: "📝 Apply for Service", href: "/application-form" },
@@ -135,7 +151,7 @@ const Footer = () => {
               <li key={idx}>
                 <a
                   href={link.href}
-                  className="hover:text-pink-400 hover:pl-2 transition-all duration-300 block"
+                  className="hover:text-purple-700 hover:pl-2 transition-all duration-300 block"
                 >
                   {link.label}
                 </a>
@@ -145,13 +161,13 @@ const Footer = () => {
         </div>
 
         {/* Column 3 - Contact & Social */}
-        <div>
-          <h3 className="text-xl font-semibold text-white mb-4 border-b border-pink-500 pb-1">
+        <div className="animate-fadeIn delay-300">
+          <h3 className="text-xl font-semibold text-purple-900 mb-4 border-b border-purple-700 pb-1">
             Contact Us
           </h3>
-          <ul className="space-y-3 text-sm text-gray-300">
+          <ul className="space-y-3 text-sm text-gray-800">
             <li className="flex items-start gap-2">
-              <FaMapMarkerAlt className="text-pink-400 mt-1" />
+              <FaMapMarkerAlt className="text-purple-600 mt-1" />
               <span>
                 <strong>Address:</strong><br />
                 Swayambhu Online Services,<br />
@@ -160,7 +176,7 @@ const Footer = () => {
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <FaPhoneAlt className="text-pink-400 mt-1" />
+              <FaPhoneAlt className="text-purple-600 mt-1" />
               <span>
                 <strong>Contact:</strong><br />
                 Vishnu Khate - 9689992252<br />
@@ -168,7 +184,7 @@ const Footer = () => {
               </span>
             </li>
             <li className="flex items-center gap-2">
-              <FaEnvelope className="text-pink-400" />
+              <FaEnvelope className="text-purple-600" />
               swayambhupvt.ltd@gmail.com
             </li>
           </ul>
@@ -179,7 +195,7 @@ const Footer = () => {
               <a
                 key={idx}
                 href="#"
-                className="p-2 bg-white text-gray-700 rounded-full hover:bg-pink-500 hover:text-white transition-all duration-300 shadow-md"
+                className="p-2 bg-white text-gray-700 rounded-full hover:bg-purple-700 hover:text-white transition-all duration-300 shadow-md transform hover:-translate-y-1"
               >
                 <Icon size={16} />
               </a>
@@ -190,7 +206,7 @@ const Footer = () => {
               href="https://wa.me/919322945038?text=Hello%20CEP%20Team%2C%20I%20need%20assistance."
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all duration-300 shadow-md"
+              className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600 transition-all duration-300 shadow-md transform hover:-translate-y-1"
             >
               <FaWhatsapp size={18} />
             </a>
@@ -199,7 +215,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="text-center py-4 text-sm text-gray-400 border-t border-gray-700 mt-10">
+      <div className="text-center py-4 text-sm text-gray-900 border-t border-purple-700 mt-10">
         © {new Date().getFullYear()} Ganesh Ekhe. All rights reserved.
       </div>
     </footer>
