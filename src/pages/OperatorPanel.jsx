@@ -2087,18 +2087,28 @@ const OperatorPanel = () => {
                     </td>
 
                     {/* Operator ID / Password Display */}
-                    <td className="px-4 py-3 border">
+                    {/* <td className="px-4 py-3 border">
                       <div className="text-sm text-gray-800">
                         ID: {app.operatorId || "N/A"}
                         <br />
                         Pass: {app.operatorPassword || "N/A"}
                       </div>
-                    </td>
+                    </td> */}
+<td className="px-4 py-3 border">
+  <div>
+    <span className="font-medium text-sm">ID:</span>{" "}
+    {app.operatorCredentials?.operatorId || "N/A"}
+  </div>
+  <div>
+    <span className="font-medium text-sm">Pass:</span>{" "}
+    {app.operatorCredentials?.operatorPassword || "N/A"}
+  </div>
+</td>
 
                     <td className="px-4 py-3 border space-y-2">
                       {(app.status === "Pending Confirmation" || app.status === "Submitted") && (
                         <>
-                          <input
+                          {/* <input
                             type="text"
                             placeholder="Operator ID"
                             onChange={(e) => handleInputChange(e, app._id, "operatorId")}
@@ -2109,7 +2119,23 @@ const OperatorPanel = () => {
                             placeholder="Password"
                             onChange={(e) => handleInputChange(e, app._id, "operatorPassword")}
                             className="block w-full border px-2 py-1 text-sm rounded"
-                          />
+                          /> */}
+                          <input
+  type="text"
+  placeholder="Operator ID"
+  value={selectedFiles[app._id]?.operatorId || app.operatorCredentials?.operatorId || ""}
+  onChange={(e) => handleInputChange(e, app._id, "operatorId")}
+  className="block w-full border px-2 py-1 text-sm rounded"
+/>
+
+<input
+  type="password"
+  placeholder="Password"
+  value={selectedFiles[app._id]?.operatorPassword || app.operatorCredentials?.operatorPassword || ""}
+  onChange={(e) => handleInputChange(e, app._id, "operatorPassword")}
+  className="block w-full border px-2 py-1 text-sm rounded"
+/>
+
                           <input
                             type="file"
                             accept="application/pdf"
