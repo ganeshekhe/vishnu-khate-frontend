@@ -1708,43 +1708,164 @@ const OperatorPanel = () => {
     if (user?.token) fetchApplications();
   }, [user?.token]);
 
-  useEffect(() => {
-    if (!user?.token) return;
-    const socket = initSocket(user.token);
+  // useEffect(() => {
+  //   if (!user?.token) return;
+  //   const socket = initSocket(user.token);
 
-    socket.on("applicationCreated", (newApp) => {
-      setApplications((prev) => [newApp, ...prev]);
+  //   socket.on("applicationCreated", (newApp) => {
+  //     setApplications((prev) => [newApp, ...prev]);
+  //   });
+
+  //   socket.on("applicationStatusUpdated", (updatedApp) => {
+  //     setApplications((prev) =>
+  //       prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+  //     );
+  //   });
+
+  //   socket.on("certificateUploaded", (updatedApp) => {
+  //     setApplications((prev) =>
+  //       prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+  //     );
+  //   });
+
+  //   socket.on("correctionSent", (updatedApp) => {
+  //     setApplications((prev) => {
+  //       const updatedApps = prev.map((app) =>
+  //         app._id === updatedApp._id ? updatedApp : app
+  //       );
+  //       countStatus(updatedApps);
+  //       return updatedApps;
+  //     });
+  //   });
+
+  //   return () => {
+  //     socket.off("applicationCreated");
+  //     socket.off("applicationStatusUpdated");
+  //     socket.off("certificateUploaded");
+  //     socket.off("correctionSent");
+  //   };
+  // }, [user]);
+
+useEffect(() => {
+  if (!user?.token) return;
+  const socket = initSocket(user.token);
+
+  // 🟢 Draft Applications (payment fail/cancel झाले तरी)
+  socket.on("applicationDrafted", (draftApp) => {
+    setApplications((prev) => {
+      const exists = prev.find((a) => a._id === draftApp._id);
+      if (exists) {
+        return prev.map((a) => (a._id === draftApp._id ? draftApp : a));
+      }
+      return [draftApp, ...prev];
     });
+  });
 
-    socket.on("applicationStatusUpdated", (updatedApp) => {
-      setApplications((prev) =>
-        prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+  // 🟢 Payment Success नंतर Submitted Applications
+  socket.on("applicationCreated", (newApp) => {
+    setApplications((prev) => {
+      const exists = prev.find((a) => a._id === newApp._id);
+      if (exists) {
+        return prev.map((a) => (a._id === newApp._id ? newApp : a));
+      }
+      return [newApp, ...prev];
+    });
+  });
+
+  socket.on("applicationStatusUpdated", (updatedApp) => {
+    setApplications((prev) =>
+      prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+    );
+  });
+
+  socket.on("certificateUploaded", (updatedApp) => {
+    setApplications((prev) =>
+      prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+    );
+  });
+
+  socket.on("correctionSent", (updatedApp) => {
+    setApplications((prev) => {
+      const updatedApps = prev.map((app) =>
+        app._id === updatedApp._id ? updatedApp : app
       );
+      countStatus(updatedApps);
+      return updatedApps;
     });
+  });
 
-    socket.on("certificateUploaded", (updatedApp) => {
-      setApplications((prev) =>
-        prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
-      );
-    });
+  return () => {
+    socket.off("applicationDrafted");
+    socket.off("applicationCreated");
+    socket.off("applicationStatusUpdated");
+    socket.off("certificateUploaded");
+    socket.off("correctionSent");
+  };
+}, [user]);
 
-    socket.on("correctionSent", (updatedApp) => {
-      setApplications((prev) => {
-        const updatedApps = prev.map((app) =>
-          app._id === updatedApp._id ? updatedApp : app
-        );
-        countStatus(updatedApps);
-        return updatedApps;
-      });
-    });
+//   useEffect(() => {
+//   if (user?.token) fetchApplications();
+// }, [user?.token]);
 
-    return () => {
-      socket.off("applicationCreated");
-      socket.off("applicationStatusUpdated");
-      socket.off("certificateUploaded");
-      socket.off("correctionSent");
-    };
-  }, [user]);
+// useEffect(() => {
+//   if (!user?.token) return;
+//   const socket = initSocket(user.token);
+
+//   // 🟢 Draft Applications (payment fail/cancel झाले तरी)
+//   socket.on("applicationDrafted", (draftApp) => {
+//     setApplications((prev) => {
+//       const exists = prev.find((a) => a._id === draftApp._id);
+//       if (exists) {
+//         // जर आधीपासून असेल तर update कर
+//         return prev.map((a) => (a._id === draftApp._id ? draftApp : a));
+//       }
+//       // नसेल तर add कर
+//       return [draftApp, ...prev];
+//     });
+//   });
+
+//   // 🟢 Payment Success नंतर Submitted Applications
+//   socket.on("applicationCreated", (newApp) => {
+//     setApplications((prev) => {
+//       const exists = prev.find((a) => a._id === newApp._id);
+//       if (exists) {
+//         return prev.map((a) => (a._id === newApp._id ? newApp : a));
+//       }
+//       return [newApp, ...prev];
+//     });
+//   });
+
+//   socket.on("applicationStatusUpdated", (updatedApp) => {
+//     setApplications((prev) =>
+//       prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+//     );
+//   });
+
+//   socket.on("certificateUploaded", (updatedApp) => {
+//     setApplications((prev) =>
+//       prev.map((app) => (app._id === updatedApp._id ? updatedApp : app))
+//     );
+//   });
+
+//   socket.on("correctionSent", (updatedApp) => {
+//     setApplications((prev) => {
+//       const updatedApps = prev.map((app) =>
+//         app._id === updatedApp._id ? updatedApp : app
+//       );
+//       countStatus(updatedApps);
+//       return updatedApps;
+//     });
+//   });
+
+//   return () => {
+//     socket.off("applicationDrafted");
+//     socket.off("applicationCreated");
+//     socket.off("applicationStatusUpdated");
+//     socket.off("certificateUploaded");
+//     socket.off("correctionSent");
+//   };
+// }, [user]);
+
 
   const fetchApplications = async () => {
     try {
