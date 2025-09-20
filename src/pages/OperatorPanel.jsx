@@ -2086,14 +2086,7 @@ const OperatorPanel = () => {
                       </button>
                     </td>
 
-                    {/* Operator ID / Password Display */}
-                    {/* <td className="px-4 py-3 border">
-                      <div className="text-sm text-gray-800">
-                        ID: {app.operatorId || "N/A"}
-                        <br />
-                        Pass: {app.operatorPassword || "N/A"}
-                      </div>
-                    </td> */}
+                   
 <td className="px-4 py-3 border">
   <div>
     <span className="font-medium text-sm">ID:</span>{" "}
@@ -2108,18 +2101,7 @@ const OperatorPanel = () => {
                     <td className="px-4 py-3 border space-y-2">
                       {(app.status === "Pending Confirmation" || app.status === "Submitted") && (
                         <>
-                          {/* <input
-                            type="text"
-                            placeholder="Operator ID"
-                            onChange={(e) => handleInputChange(e, app._id, "operatorId")}
-                            className="block w-full border px-2 py-1 text-sm rounded"
-                          />
-                          <input
-                            type="password"
-                            placeholder="Password"
-                            onChange={(e) => handleInputChange(e, app._id, "operatorPassword")}
-                            className="block w-full border px-2 py-1 text-sm rounded"
-                          /> */}
+                      
                           <input
   type="text"
   placeholder="User ID"
@@ -2222,9 +2204,76 @@ const OperatorPanel = () => {
             </table>
           </div>
         )}
-      </div>
+
+        {/* Profile Modal */}
+      {showProfileModal && selectedProfile && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fade-in">
+          <div className="bg-gradient-to-br from-white via-gray-100 to-gray-50 p-6 rounded-3xl shadow-2xl max-w-lg w-full relative transform transition-all duration-300 hover:scale-[1.02]">
+            <button
+              onClick={() => setShowProfileModal(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-3xl transition-colors duration-300"
+             >
+               ×
+             </button>
+             <h3 className="text-3xl font-extrabold mb-4 text-indigo-700 flex items-center gap-2 animate-slide-in-left">
+              👤 User Profile
+             </h3>
+            <div className="space-y-2 text-gray-700 text-sm">
+               <p><strong>Name:</strong> {selectedProfile.name}</p>
+               <p><strong>Gender:</strong> {selectedProfile.gender}</p>
+              <p><strong>DOB:</strong> {selectedProfile.dob ? new Date(selectedProfile.dob).toLocaleDateString() : "N/A"}</p>
+              <p><strong>Caste:</strong> {selectedProfile.caste}</p>
+             </div>
+
+             <div className="mt-6">
+               <h4 className="text-lg font-semibold mb-2 text-indigo-600">📄 Documents</h4>
+              <div className="max-h-56 overflow-y-auto space-y-3">
+               {Object.entries(docLabels).map(([key, label]) => {
+                  const file = selectedProfile[key];
+                   if (!file) return null;
+                   const filesArray = Array.isArray(file) ? file : [file];
+                  return filesArray.map((f, idx) => (
+                     <div
+                       key={`${key}-${idx}`}
+                       className="flex justify-between items-center border border-gray-200 p-3 rounded-xl bg-white shadow hover:shadow-lg transition-shadow duration-300"
+                    >
+                      <span className="text-gray-800 font-medium">
+                        {label} {filesArray.length > 1 ? `(${idx + 1})` : ""}
+                      </span>
+                       <div className="flex gap-2">
+                       <a
+                          href={`${BASE_URL}/api/files/${f.filename || f}`}
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           className="text-blue-600 underline hover:text-blue-800 transition-colors duration-300"
+                        >
+                          View
+                       </a>
+                        <button
+                           onClick={() => handleDownload(f.filename || f)}
+                          className="text-green-600 hover:text-green-800 transition-colors duration-300"
+                        >
+                           Download
+                         </button>
+                        <button
+                           onClick={() => handleDeleteDoc(key, idx)}
+                           className="text-red-600 hover:text-red-800 transition-colors duration-300"
+                         >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  ));
+                })}
+               </div>             </div>
+           </div>
+         </div>
+      )}
+
     </div>
-  );
-};
+    </div>
+   );
+ };
+     
 
 export default OperatorPanel;
