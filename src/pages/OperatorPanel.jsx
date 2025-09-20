@@ -2032,7 +2032,7 @@ const OperatorPanel = () => {
                   <th className="px-4 py-3 border">Status</th>
                   <th className="px-4 py-3 border">Payment</th>
                   <th className="px-4 py-3 border">Profile</th>
-                  <th className="px-4 py-3 border">Operator ID / Password</th>
+                  <th className="px-4 py-3 border">User ID / Password</th>
                   <th className="px-4 py-3 border">Upload</th>
                   <th className="px-4 py-3 border">Corrections</th>
                   <th className="px-4 py-3 border">Actions</th>
@@ -2122,7 +2122,7 @@ const OperatorPanel = () => {
                           /> */}
                           <input
   type="text"
-  placeholder="Operator ID"
+  placeholder="User ID"
   value={selectedFiles[app._id]?.operatorId || app.operatorCredentials?.operatorId || ""}
   onChange={(e) => handleInputChange(e, app._id, "operatorId")}
   className="block w-full border px-2 py-1 text-sm rounded"
