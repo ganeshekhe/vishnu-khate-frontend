@@ -570,7 +570,7 @@ useEffect(() => {
                           </button>
                         </>
                       )}
-                      {app.status === "Confirmed" && (
+                      {/* {app.status === "Confirmed" && (
                         <>
                           <input
                             type="file"
@@ -585,7 +585,24 @@ useEffect(() => {
                             Upload Certificate
                           </button>
                         </>
-                      )}
+                      )} */}
+                      {(app.status === "Confirmed" || app.status === "In Review") && (
+  <>
+    <input
+      type="file"
+      accept="application/pdf"
+      onChange={(e) => handleFileChange(e, app._id, "certificate")}
+      className="block w-full text-sm text-gray-700"
+    />
+    <button
+      onClick={() => handleUploadCertificate(app._id)}
+      className="px-3 py-1 bg-green-600 text-white rounded w-full text-sm"
+    >
+      Upload Certificate
+    </button>
+  </>
+)}
+
                       {app.status !== "Pending Confirmation" &&
                         app.status !== "Submitted" &&
                         app.status !== "Confirmed" && (
