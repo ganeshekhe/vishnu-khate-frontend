@@ -867,59 +867,130 @@ const OperatorPanel = () => {
     }));
   };
 
-  const handleUpload = async (appId) => {
-    const file = selectedFiles[appId]?.formPdf;
-    const operatorId = selectedFiles[appId]?.operatorId || "";
-    const operatorPassword = selectedFiles[appId]?.operatorPassword || "";
+  // const handleUpload = async (appId) => {
+  //   const file = selectedFiles[appId]?.formPdf;
+  //   const operatorId = selectedFiles[appId]?.operatorId || "";
+  //   const operatorPassword = selectedFiles[appId]?.operatorPassword || "";
 
-    if (!file || file.type !== "application/pdf")
-      return toast.error("Please select a valid PDF file");
+  //   if (!file || file.type !== "application/pdf")
+  //     return toast.error("Please select a valid PDF file");
 
-    try {
-      const formData = new FormData();
-      formData.append("formPdf", file);
-      formData.append("operatorId", operatorId);
-      formData.append("operatorPassword", operatorPassword);
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("formPdf", file);
+  //     formData.append("operatorId", operatorId);
+  //     formData.append("operatorPassword", operatorPassword);
 
-      setUploadingAppId(appId);
-      await axios.put(`${BASE_URL}/api/applications/${appId}/upload-pdf`, formData, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success("Form uploaded successfully");
-      setUploadingAppId(null);
-      fetchApplications();
-    } catch (err) {
-      console.error("Upload error:", err);
-      toast.error("Upload failed");
-      setUploadingAppId(null);
-    }
-  };
+  //     setUploadingAppId(appId);
+  //     await axios.put(`${BASE_URL}/api/applications/${appId}/upload-pdf`, formData, {
+  //       headers: {
+  //         Authorization: `Bearer ${user.token}`,
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     });
+  //     toast.success("Form uploaded successfully");
+  //     setUploadingAppId(null);
+  //     fetchApplications();
+  //   } catch (err) {
+  //     console.error("Upload error:", err);
+  //     toast.error("Upload failed");
+  //     setUploadingAppId(null);
+  //   }
+  // };
 
-  const handleUploadCertificate = async (appId) => {
-    const file = selectedFiles[appId]?.certificate;
-    if (!file || file.type !== "application/pdf")
-      return toast.error("Please select a valid certificate PDF");
+  // const handleUploadCertificate = async (appId) => {
+  //   const file = selectedFiles[appId]?.certificate;
+  //   if (!file || file.type !== "application/pdf")
+  //     return toast.error("Please select a valid certificate PDF");
 
-    try {
-      const formData = new FormData();
-      formData.append("certificate", file);
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("certificate", file);
 
-      setUploadingAppId(appId);
-      await axios.put(`${BASE_URL}/api/applications/${appId}/uploadCertificate`, formData, {
-        headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "multipart/form-data" },
-      });
-      toast.success("Certificate uploaded successfully");
-      setUploadingAppId(null);
-      fetchApplications();
-    } catch (err) {
-      console.error("Certificate upload error:", err);
-      toast.error("Certificate upload failed");
-      setUploadingAppId(null);
-    }
-  };
+  //     setUploadingAppId(appId);
+  //     await axios.put(`${BASE_URL}/api/applications/${appId}/uploadCertificate`, formData, {
+  //       headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "multipart/form-data" },
+  //     });
+  //     toast.success("Certificate uploaded successfully");
+
+  //     setUploadingAppId(null);
+  //     fetchApplications();
+  //   } catch (err) {
+  //     console.error("Certificate upload error:", err);
+  //     toast.error("Certificate upload failed");
+  //     setUploadingAppId(null);
+  //   }
+  // };
+const handleUpload = async (appId) => {
+  const file = selectedFiles[appId]?.formPdf;
+  const operatorId = selectedFiles[appId]?.operatorId || "";
+  const operatorPassword = selectedFiles[appId]?.operatorPassword || "";
+
+  if (!file || file.type !== "application/pdf")
+    return toast.error("Please select a valid PDF file");
+
+  try {
+    const formData = new FormData();
+    formData.append("formPdf", file);
+    formData.append("operatorId", operatorId);
+    formData.append("operatorPassword", operatorPassword);
+
+    setUploadingAppId(appId);
+    await axios.put(`${BASE_URL}/api/applications/${appId}/upload-pdf`, formData, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    toast.success("Form uploaded successfully");
+
+    // ✅ Inputs clear करा
+    setSelectedFiles((prev) => {
+      const updated = { ...prev };
+      delete updated[appId]; // पूर्ण reset
+      return updated;
+    });
+
+    setUploadingAppId(null);
+    fetchApplications();
+  } catch (err) {
+    console.error("Upload error:", err);
+    toast.error("Upload failed");
+    setUploadingAppId(null);
+  }
+};
+
+const handleUploadCertificate = async (appId) => {
+  const file = selectedFiles[appId]?.certificate;
+  if (!file || file.type !== "application/pdf")
+    return toast.error("Please select a valid certificate PDF");
+
+  try {
+    const formData = new FormData();
+    formData.append("certificate", file);
+
+    setUploadingAppId(appId);
+    await axios.put(`${BASE_URL}/api/applications/${appId}/uploadCertificate`, formData, {
+      headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "multipart/form-data" },
+    });
+    toast.success("Certificate uploaded successfully");
+
+    // ✅ Inputs clear करा
+    setSelectedFiles((prev) => {
+      const updated = { ...prev };
+      delete updated[appId];
+      return updated;
+    });
+
+    setUploadingAppId(null);
+    fetchApplications();
+  } catch (err) {
+    console.error("Certificate upload error:", err);
+    toast.error("Certificate upload failed");
+    setUploadingAppId(null);
+  }
+};
+
 
   const handleReject = async (appId) => {
     const reason = prompt("Enter rejection reason:");
