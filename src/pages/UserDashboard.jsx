@@ -423,26 +423,52 @@ const UserDashboard = () => {
   };
 
   // Submit correction => backend will set status = "In Review"
-  const submitCorrection = async (appId) => {
-    const reason = corrections[appId];
-    if (!reason?.trim()) {
-      toast.error("Please enter correction reason.");
-      return;
-    }
+  // const submitCorrection = async (appId) => {
+  //   const reason = corrections[appId];
+  //   if (!reason?.trim()) {
+  //     toast.error("Please enter correction reason.");
+  //     return;
+  //   }
 
-    try {
-      await axios.put(
-        `${BASE_URL}/api/applications/${appId}/correction`,
-        { comment: reason },
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      );
-      toast.success("Correction sent to operator.");
-      fetchApps();
-    } catch (err) {
-      console.error("Correction submit failed:", err.response?.data || err.message);
-      toast.error("Failed to send correction.");
-    }
-  };
+  //   try {
+  //     await axios.put(
+  //       `${BASE_URL}/api/applications/${appId}/correction`,
+  //       { comment: reason },
+  //       { headers: { Authorization: `Bearer ${user.token}` } }
+  //     );
+  //     toast.success("Correction sent to operator.");
+  //     fetchApps();
+  //   } catch (err) {
+  //     console.error("Correction submit failed:", err.response?.data || err.message);
+  //     toast.error("Failed to send correction.");
+  //   }
+  // };
+// Submit correction => backend will set status = "In Review"
+const submitCorrection = async (appId) => {
+  const reason = corrections[appId];
+  if (!reason?.trim()) {
+    toast.error("Please enter correction reason.");
+    return;
+  }
+
+  try {
+    await axios.put(
+      `${BASE_URL}/api/applications/${appId}/correction`,
+      { comment: reason },
+      { headers: { Authorization: `Bearer ${user.token}` } }
+    );
+    toast.success("Correction sent to operator.");
+
+    // ✅ Input auto clear करा
+    setCorrections((prev) => ({ ...prev, [appId]: "" }));
+
+    // ✅ Applications refresh करा
+    fetchApps();
+  } catch (err) {
+    console.error("Correction submit failed:", err.response?.data || err.message);
+    toast.error("Failed to send correction.");
+  }
+};
 
   // Download certificate
   const downloadCertificate = async (filename, appId) => {
