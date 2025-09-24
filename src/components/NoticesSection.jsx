@@ -138,7 +138,7 @@ const NoticesSection = () => {
   };
 
   return (
-    <div className="w-full bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-800 shadow-lg border-b border-purple-700">
+    <div className="sticky top-0 z-50 w-full bg-gradient-to-r from-purple-900/95 via-indigo-900/95 to-purple-800/95 shadow-lg border-b border-purple-700">
       <div className="overflow-hidden whitespace-nowrap">
         <div className="inline-flex items-center animate-marquee">
           {notices.length === 0 ? (
@@ -175,7 +175,7 @@ const NoticesSection = () => {
       <style>
         {`
           @keyframes marquee {
-            0%   { transform: translateX(0%); }
+            0% { transform: translateX(0%); }
             100% { transform: translateX(-50%); }
           }
           .animate-marquee {

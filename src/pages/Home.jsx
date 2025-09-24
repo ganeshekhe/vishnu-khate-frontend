@@ -46,10 +46,10 @@ const Home = () => {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Services */}
+      {/* Services Section */}
       <ServicesSection />
 
-      {/* Highlights */}
+      {/* Highlights Section */}
       <HighlightsSection />
 
       {/* Steps / How it Works */}
