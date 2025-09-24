@@ -1263,71 +1263,7 @@ const handleUploadCertificate = async (appId) => {
                       </div>
                     </td>
 
-                    {/* <td className="px-4 py-3 border space-y-2">
-                      {(app.status === "Pending Confirmation" || app.status === "Submitted" || app.status === "In Review") && (
-                        <>
-                          <input
-                            type="text"
-                            placeholder="User ID"
-                            value={selectedFiles[app._id]?.operatorId || app.operatorCredentials?.operatorId || ""}
-                            onChange={(e) => handleInputChange(e, app._id, "operatorId")}
-                            className="block w-full border px-2 py-1 text-sm rounded"
-                          />
-
-                          <input
-                            type="password"
-                            placeholder="Password"
-                            value={selectedFiles[app._id]?.operatorPassword || app.operatorCredentials?.operatorPassword || ""}
-                            onChange={(e) => handleInputChange(e, app._id, "operatorPassword")}
-                            className="block w-full border px-2 py-1 text-sm rounded"
-                          />
-
-                          <input
-                            type="file"
-                            accept="application/pdf"
-                            onChange={(e) => handleFileChange(e, app._id, "formPdf")}
-                            className="block w-full text-sm text-gray-700"
-                          />
-                          <button
-                            onClick={() => handleUpload(app._id)}
-                            className="px-3 py-1 bg-indigo-600 text-white rounded w-full text-sm"
-                          >
-                            Upload Form
-                          </button>
-                        </>
-                      )}
-
-                      {app.status === "Confirmed" && (
-                        <>
-                          <input
-                            type="file"
-                            accept="application/pdf"
-                            onChange={(e) => handleFileChange(e, app._id, "certificate")}
-                            className="block w-full text-sm text-gray-700"
-                          />
-                          <button
-                            onClick={() => handleUploadCertificate(app._id)}
-                            className="px-3 py-1 bg-green-600 text-white rounded w-full text-sm"
-                          >
-                            Upload Certificate
-                          </button>
-                        </>
-                      )}
-
-                      {app.status !== "Pending Confirmation" &&
-                        app.status !== "Submitted" &&
-                        app.status !== "Confirmed" &&
-                        app.status !== "In Review" && (
-                          // <span className="text-gray-400 text-sm">N/A</span>
-                           <>
-     {app.status === "Completed" && app.certificate?.filename ? (
-       <span className="text-green-600 text-sm font-medium">Certificate Uploaded</span>
-     ) : (
-       <span className="text-gray-400 text-sm">N/A</span>
-     )}
-   </>
-                        )}
-                    </td> */}
+                  
 
                     <td className="px-4 py-3 border space-y-2">
   {(app.status === "Pending Confirmation" ||
