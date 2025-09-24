@@ -1095,36 +1095,17 @@ const handleUploadCertificate = async (appId) => {
     ...new Set(applications.map((app) => app.service?.category?.name).filter(Boolean)),
   ];
 
-  // const handleDownloadAllDocs = async (userId) => {
-  //   try {
-  //     const res = await axios.get(`${BASE_URL}/api/applications/${userId}/download-all`, {
-  //       headers: { Authorization: `Bearer ${user.token}` },
-  //     });
-  //     alert(res.data.message || "Documents downloaded successfully");
-  //   } catch (err) {
-  //     console.error("Download all docs failed:", err);
-  //     alert("Failed to download all documents");
-  //   }
-  // };
-const handleDownloadAllDocs = async (userId) => {
-  try {
-    const res = await axios.get(`${BASE_URL}/api/applications/${userId}/download-all`, {
-      headers: { Authorization: `Bearer ${user.token}` },
-      responseType: 'blob',
-    });
-
-    const url = window.URL.createObjectURL(new Blob([res.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `User_${userId}_Documents.zip`);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  } catch (err) {
-    console.error("Download all docs failed:", err);
-    alert("Failed to download all documents");
-  }
-};
+  const handleDownloadAllDocs = async (userId) => {
+    try {
+      const res = await axios.get(`${BASE_URL}/api/applications/${userId}/download-all`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      alert(res.data.message || "Documents downloaded successfully");
+    } catch (err) {
+      console.error("Download all docs failed:", err);
+      alert("Failed to download all documents");
+    }
+  };
 
   const filteredApps = applications.filter((app) => {
     const matchesStatus = statusFilter === "All" || app.status === statusFilter;
