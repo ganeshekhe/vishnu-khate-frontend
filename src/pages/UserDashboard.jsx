@@ -483,20 +483,40 @@ const submitCorrection = async (appId) => {
   };
 
   // Update application (for rejected flow)
+  // const handleUpdate = async (appId, updatedData) => {
+  //   try {
+  //     await axios.put(
+  //       `${BASE_URL}/api/applications/${appId}/update`,
+  //       { updates: updatedData },
+  //       { headers: { Authorization: `Bearer ${user.token}` } }
+  //     );
+  //     toast.success("Application updated & resubmitted!");
+  //     fetchApps();
+  //   } catch (err) {
+  //     console.error("Update error:", err.response?.data || err.message);
+  //     toast.error(`Failed to update: ${err.response?.data?.message || err.message}`);
+  //   }
+  // };
   const handleUpdate = async (appId, updatedData) => {
-    try {
-      await axios.put(
-        `${BASE_URL}/api/applications/${appId}/update`,
-        { updates: updatedData },
-        { headers: { Authorization: `Bearer ${user.token}` } }
-      );
-      toast.success("Application updated & resubmitted!");
-      fetchApps();
-    } catch (err) {
-      console.error("Update error:", err.response?.data || err.message);
-      toast.error(`Failed to update: ${err.response?.data?.message || err.message}`);
-    }
-  };
+  try {
+    await axios.put(
+      `${BASE_URL}/api/applications/${appId}/update`,
+      { updates: updatedData },
+      { headers: { Authorization: `Bearer ${user.token}` } }
+    );
+    toast.success("Application updated & resubmitted!");
+
+    // ✅ Textarea clear करा
+    setCorrections((prev) => ({ ...prev, [appId]: "" }));
+
+    // ✅ Applications refresh करा
+    fetchApps();
+  } catch (err) {
+    console.error("Update error:", err.response?.data || err.message);
+    toast.error(`Failed to update: ${err.response?.data?.message || err.message}`);
+  }
+};
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
