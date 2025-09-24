@@ -785,13 +785,24 @@ const OperatorPanel = () => {
   useEffect(() => {
     if (!user?.token) return;
     const socket = initSocket(user.token);
+    // हा भाग काढून टाक
+socket.on("applicationDrafted", (draftApp) => {
+  setApplications((prev) => {
+    const exists = prev.find((a) => a._id === draftApp._id);
+    if (exists) {
+      return prev.map((a) => (a._id === draftApp._id ? draftApp : a));
+    }
+    return [draftApp, ...prev];
+  });
+});
+
 
     
     socket.on("applicationCreated", (newApp) => {
       setApplications((prev) => {
         const exists = prev.find((a) => a._id === newApp._id);
         if (exists) {
-          return prev.map((a) => (a._1d === newApp._id ? newApp : a));
+          return prev.map((a) => (a._id === newApp._id ? newApp : a));
         }
         return [newApp, ...prev];
       });
@@ -821,7 +832,7 @@ const OperatorPanel = () => {
     });
 
     return () => {
-     
+       socket.off("applicationDrafted");
       socket.off("applicationCreated");
       socket.off("applicationStatusUpdated");
       socket.off("certificateUploaded");
