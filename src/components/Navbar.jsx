@@ -658,54 +658,34 @@ const NavLinks = ({ user, handleLogout, setIsOpen, mobile }) => {
 
       {/* Dropdown for Policy Pages */}
       <li className="relative">
-        <button
-          onClick={() => mobile ? setShowDropdown(!showDropdown) : null}
-          onMouseEnter={() => !mobile && setShowDropdown(true)}
-          onMouseLeave={() => !mobile && setShowDropdown(false)}
-          className="flex items-center space-x-1 hover:text-yellow-200 transition-colors font-medium"
-        >
-          <span>Policies</span>
-          <ChevronDown size={18} />
-        </button>
+  <button
+    onClick={() => setShowDropdown(!showDropdown)}
+    className="flex items-center space-x-1 hover:text-yellow-200 transition-colors font-medium"
+  >
+    <span>Policies</span>
+    <ChevronDown size={18} className={`${showDropdown ? "rotate-180" : "rotate-0"} transition-transform`} />
+  </button>
 
-        {/* Dropdown */}
-        {showDropdown && (
-          <ul
-            onMouseEnter={() => !mobile && setShowDropdown(true)}
-            onMouseLeave={() => !mobile && setShowDropdown(false)}
-            className="absolute mt-2 bg-white text-gray-800 rounded-lg shadow-lg min-w-[200px] z-50"
+  {showDropdown && (
+    <ul className="absolute mt-2 bg-white text-gray-800 rounded-lg shadow-lg min-w-[200px] z-50">
+      {policyPages.map((page) => (
+        <li key={page.name}>
+          <NavLink
+            to={page.path}
+            onClick={() => {
+              setShowDropdown(false);
+              setIsOpen && setIsOpen(false);
+            }}
+            className="block px-4 py-2 hover:bg-indigo-50 hover:text-indigo-800 transition-colors"
           >
-            {policyPages.map((page) => (
-              <li key={page.name}>
-                <NavLink
-                  to={page.path}
-                  onClick={() => handleClick(setIsOpen)}
-                  className="block px-4 py-2 hover:bg-indigo-50 hover:text-indigo-800 transition-colors"
-                >
-                  {page.name}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        )}
+            {page.name}
+          </NavLink>
+        </li>
+      ))}
+    </ul>
+  )}
+</li>
 
-        {/* Mobile Dropdown */}
-        {mobile && showDropdown && (
-          <ul className="pl-4 mt-2 space-y-2 font-medium">
-            {policyPages.map((page) => (
-              <li key={page.name}>
-                <NavLink
-                  to={page.path}
-                  onClick={() => handleClick(setIsOpen)}
-                  className="block hover:text-yellow-200 transition-colors"
-                >
-                  {page.name}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        )}
-      </li>
 
       {/* Profile + Logout for user */}
       {user && user.role === "user" && (
