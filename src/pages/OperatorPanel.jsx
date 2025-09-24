@@ -1318,7 +1318,14 @@ const handleUploadCertificate = async (appId) => {
                         app.status !== "Submitted" &&
                         app.status !== "Confirmed" &&
                         app.status !== "In Review" && (
-                          <span className="text-gray-400 text-sm">N/A</span>
+                          // <span className="text-gray-400 text-sm">N/A</span>
+                           <>
+     {app.status === "Completed" && app.certificate?.filename ? (
+       <span className="text-green-600 text-sm font-medium">Certificate Uploaded</span>
+     ) : (
+       <span className="text-gray-400 text-sm">N/A</span>
+     )}
+   </>
                         )}
                     </td>
 
