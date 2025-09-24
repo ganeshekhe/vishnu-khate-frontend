@@ -1095,40 +1095,17 @@ const handleUploadCertificate = async (appId) => {
     ...new Set(applications.map((app) => app.service?.category?.name).filter(Boolean)),
   ];
 
-  // const handleDownloadAllDocs = async (userId) => {
-  //   try {
-  //     const res = await axios.get(`${BASE_URL}/api/applications/${userId}/download-all`, {
-  //       headers: { Authorization: `Bearer ${user.token}` },
-  //     });
-  //     alert(res.data.message || "Documents downloaded successfully");
-  //   } catch (err) {
-  //     console.error("Download all docs failed:", err);
-  //     alert("Failed to download all documents");
-  //   }
-  // };
-
-
   const handleDownloadAllDocs = async (userId) => {
-  try {
-    const res = await axios.get(`${BASE_URL}/api/applications/${userId}/download-all`, {
-      headers: { Authorization: `Bearer ${user.token}` },
-    });
-
-    // ✅ Backend ने दिलेला path वापरून message
-    const message = res.data.message || "Documents downloaded successfully";
-    const path = res.data.path || "";
-    toast.success(message);
-
-    // Optional: user ला path show करायचा असेल तर
-    if (path) {
-      console.log("Documents saved at:", path);
-      alert(`Documents downloaded at: ${path}`);
+    try {
+      const res = await axios.get(`${BASE_URL}/api/applications/${userId}/download-all`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      alert(res.data.message || "Documents downloaded successfully");
+    } catch (err) {
+      console.error("Download all docs failed:", err);
+      alert("Failed to download all documents");
     }
-  } catch (err) {
-    console.error("Download all docs failed:", err);
-    toast.error("Failed to download all documents");
-  }
-};
+  };
 
   const filteredApps = applications.filter((app) => {
     const matchesStatus = statusFilter === "All" || app.status === statusFilter;
