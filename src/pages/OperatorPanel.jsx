@@ -1,4 +1,3 @@
-
 // import { useEffect, useState } from "react";
 // import axios from "axios";
 // import { useAuth } from "../context/AuthContext";
@@ -60,8 +59,6 @@
 //   useEffect(() => {
 //     if (user?.token) fetchApplications();
 //   }, [user?.token]);
-
- 
 
 // useEffect(() => {
 //   if (!user?.token) return;
@@ -182,7 +179,6 @@
 // //     socket.off("correctionSent");
 // //   };
 // // }, [user]);
-
 
 //   const fetchApplications = async () => {
 //     try {
@@ -524,7 +520,6 @@
 //                       </button>
 //                     </td>
 
-                   
 // <td className="px-4 py-3 border">
 //   <div>
 //     <span className="font-medium text-sm">ID:</span>{" "}
@@ -539,7 +534,7 @@
 //                     <td className="px-4 py-3 border space-y-2">
 //                       {(app.status === "Pending Confirmation" || app.status === "Submitted") && (
 //                         <>
-                      
+
 //                           <input
 //   type="text"
 //   placeholder="User ID"
@@ -570,7 +565,7 @@
 //                           </button>
 //                         </>
 //                       )}
-                      
+
 // {(app.status === "Confirmed" || app.status === "In Review") && (
 //   <>
 //     <input
@@ -587,7 +582,6 @@
 //     </button>
 //   </>
 // )}
-
 
 //                       {app.status !== "Pending Confirmation" &&
 //                         app.status !== "Submitted" &&
@@ -715,10 +709,8 @@
 //     </div>
 //    );
 //  };
-     
 
 // export default OperatorPanel;
-
 
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -770,6 +762,7 @@ const OperatorPanel = () => {
 
   const statusOptions = [
     "All",
+
     "Submitted",
     "In Review",
     "Pending Confirmation",
@@ -786,18 +779,16 @@ const OperatorPanel = () => {
     if (!user?.token) return;
     const socket = initSocket(user.token);
     // हा भाग काढून टाक
-socket.on("applicationDrafted", (draftApp) => {
-  setApplications((prev) => {
-    const exists = prev.find((a) => a._id === draftApp._id);
-    if (exists) {
-      return prev.map((a) => (a._id === draftApp._id ? draftApp : a));
-    }
-    return [draftApp, ...prev];
-  });
-});
+    socket.on("applicationDrafted", (draftApp) => {
+      setApplications((prev) => {
+        const exists = prev.find((a) => a._id === draftApp._id);
+        if (exists) {
+          return prev.map((a) => (a._id === draftApp._id ? draftApp : a));
+        }
+        return [draftApp, ...prev];
+      });
+    });
 
-
-    
     socket.on("applicationCreated", (newApp) => {
       setApplications((prev) => {
         const exists = prev.find((a) => a._id === newApp._id);
@@ -832,7 +823,7 @@ socket.on("applicationDrafted", (draftApp) => {
     });
 
     return () => {
-       socket.off("applicationDrafted");
+      socket.off("applicationDrafted");
       socket.off("applicationCreated");
       socket.off("applicationStatusUpdated");
       socket.off("certificateUploaded");
@@ -932,76 +923,86 @@ socket.on("applicationDrafted", (draftApp) => {
   //     setUploadingAppId(null);
   //   }
   // };
-const handleUpload = async (appId) => {
-  const file = selectedFiles[appId]?.formPdf;
-  const operatorId = selectedFiles[appId]?.operatorId || "";
-  const operatorPassword = selectedFiles[appId]?.operatorPassword || "";
+  const handleUpload = async (appId) => {
+    const file = selectedFiles[appId]?.formPdf;
+    const operatorId = selectedFiles[appId]?.operatorId || "";
+    const operatorPassword = selectedFiles[appId]?.operatorPassword || "";
 
-  if (!file || file.type !== "application/pdf")
-    return toast.error("Please select a valid PDF file");
+    if (!file || file.type !== "application/pdf")
+      return toast.error("Please select a valid PDF file");
 
-  try {
-    const formData = new FormData();
-    formData.append("formPdf", file);
-    formData.append("operatorId", operatorId);
-    formData.append("operatorPassword", operatorPassword);
+    try {
+      const formData = new FormData();
+      formData.append("formPdf", file);
+      formData.append("operatorId", operatorId);
+      formData.append("operatorPassword", operatorPassword);
 
-    setUploadingAppId(appId);
-    await axios.put(`${BASE_URL}/api/applications/${appId}/upload-pdf`, formData, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    toast.success("Form uploaded successfully");
+      setUploadingAppId(appId);
+      await axios.put(
+        `${BASE_URL}/api/applications/${appId}/upload-pdf`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Form uploaded successfully");
 
-    // ✅ Inputs clear करा
-    setSelectedFiles((prev) => {
-      const updated = { ...prev };
-      delete updated[appId]; // पूर्ण reset
-      return updated;
-    });
+      // ✅ Inputs clear करा
+      setSelectedFiles((prev) => {
+        const updated = { ...prev };
+        delete updated[appId]; // पूर्ण reset
+        return updated;
+      });
 
-    setUploadingAppId(null);
-    fetchApplications();
-  } catch (err) {
-    console.error("Upload error:", err);
-    toast.error("Upload failed");
-    setUploadingAppId(null);
-  }
-};
+      setUploadingAppId(null);
+      fetchApplications();
+    } catch (err) {
+      console.error("Upload error:", err);
+      toast.error("Upload failed");
+      setUploadingAppId(null);
+    }
+  };
 
-const handleUploadCertificate = async (appId) => {
-  const file = selectedFiles[appId]?.certificate;
-  if (!file || file.type !== "application/pdf")
-    return toast.error("Please select a valid certificate PDF");
+  const handleUploadCertificate = async (appId) => {
+    const file = selectedFiles[appId]?.certificate;
+    if (!file || file.type !== "application/pdf")
+      return toast.error("Please select a valid certificate PDF");
 
-  try {
-    const formData = new FormData();
-    formData.append("certificate", file);
+    try {
+      const formData = new FormData();
+      formData.append("certificate", file);
 
-    setUploadingAppId(appId);
-    await axios.put(`${BASE_URL}/api/applications/${appId}/uploadCertificate`, formData, {
-      headers: { Authorization: `Bearer ${user.token}`, "Content-Type": "multipart/form-data" },
-    });
-    toast.success("Certificate uploaded successfully");
+      setUploadingAppId(appId);
+      await axios.put(
+        `${BASE_URL}/api/applications/${appId}/uploadCertificate`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      toast.success("Certificate uploaded successfully");
 
-    // ✅ Inputs clear करा
-    setSelectedFiles((prev) => {
-      const updated = { ...prev };
-      delete updated[appId];
-      return updated;
-    });
+      // ✅ Inputs clear करा
+      setSelectedFiles((prev) => {
+        const updated = { ...prev };
+        delete updated[appId];
+        return updated;
+      });
 
-    setUploadingAppId(null);
-    fetchApplications();
-  } catch (err) {
-    console.error("Certificate upload error:", err);
-    toast.error("Certificate upload failed");
-    setUploadingAppId(null);
-  }
-};
-
+      setUploadingAppId(null);
+      fetchApplications();
+    } catch (err) {
+      console.error("Certificate upload error:", err);
+      toast.error("Certificate upload failed");
+      setUploadingAppId(null);
+    }
+  };
 
   const handleReject = async (appId) => {
     const reason = prompt("Enter rejection reason:");
@@ -1033,7 +1034,9 @@ const handleUploadCertificate = async (appId) => {
         {},
         { headers: { Authorization: `Bearer ${user.token}` } }
       );
-      toast.success("Status updated to " + (res.data.application?.status || nextStatus));
+      toast.success(
+        "Status updated to " + (res.data.application?.status || nextStatus)
+      );
       fetchApplications();
     } catch (err) {
       console.error("Status update error:", err.response?.data || err.message);
@@ -1092,14 +1095,19 @@ const handleUploadCertificate = async (appId) => {
 
   const categories = [
     "All",
-    ...new Set(applications.map((app) => app.service?.category?.name).filter(Boolean)),
+    ...new Set(
+      applications.map((app) => app.service?.category?.name).filter(Boolean)
+    ),
   ];
 
   const handleDownloadAllDocs = async (userId) => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/applications/${userId}/download-all`, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
+      const res = await axios.get(
+        `${BASE_URL}/api/applications/${userId}/download-all`,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      );
       alert(res.data.message || "Documents downloaded successfully");
     } catch (err) {
       console.error("Download all docs failed:", err);
@@ -1110,7 +1118,8 @@ const handleUploadCertificate = async (appId) => {
   const filteredApps = applications.filter((app) => {
     const matchesStatus = statusFilter === "All" || app.status === statusFilter;
     const matchesCategory =
-      categoryFilter === "All" || app.service?.category?.name === categoryFilter;
+      categoryFilter === "All" ||
+      app.service?.category?.name === categoryFilter;
 
     if (!searchQuery) return matchesStatus && matchesCategory;
 
@@ -1120,7 +1129,8 @@ const handleUploadCertificate = async (appId) => {
       typeof app.user?.name === "string" &&
       app.user.name.toLowerCase().includes(searchLower);
 
-    const mobileMatch = app.user?.mobile && app.user.mobile.toString().includes(searchQuery);
+    const mobileMatch =
+      app.user?.mobile && app.user.mobile.toString().includes(searchQuery);
 
     const serviceMatch =
       typeof app.service?.name === "string" &&
@@ -1137,7 +1147,11 @@ const handleUploadCertificate = async (appId) => {
     return (
       matchesStatus &&
       matchesCategory &&
-      (userNameMatch || mobileMatch || serviceMatch || subServiceMatch || categoryMatch)
+      (userNameMatch ||
+        mobileMatch ||
+        serviceMatch ||
+        subServiceMatch ||
+        categoryMatch)
     );
   });
 
@@ -1145,7 +1159,9 @@ const handleUploadCertificate = async (appId) => {
     <div>
       <Toaster position="top-right" reverseOrder={false} />
       <div className="max-w-7xl mx-auto p-6 bg-white shadow-xl rounded-2xl mt-16">
-        <h2 className="text-3xl font-extrabold mb-6 text-indigo-700">Operator Panel</h2>
+        <h2 className="text-3xl font-extrabold mb-6 text-indigo-700">
+          Operator Panel
+        </h2>
 
         {/* Search & Filter */}
         <div className="mb-6 flex flex-wrap gap-3 items-center">
@@ -1211,7 +1227,9 @@ const handleUploadCertificate = async (appId) => {
                     <td className="px-4 py-3 border">
                       {app.user?.name}
                       <br />
-                      <span className="text-xs text-gray-500">{app.user?.mobile}</span>
+                      <span className="text-xs text-gray-500">
+                        {app.user?.mobile}
+                      </span>
                     </td>
                     <td className="px-4 py-3 border">
                       {app.service?.name}
@@ -1230,7 +1248,8 @@ const handleUploadCertificate = async (appId) => {
                           }`}
                         >
                           <IndianRupee size={12} />
-                          {app.paymentInfo.paymentStatus} (₹{app.paymentInfo.amount || 0})
+                          {app.paymentInfo.paymentStatus} (₹
+                          {app.paymentInfo.amount || 0})
                         </span>
                       ) : (
                         <span className="text-gray-400">N/A</span>
@@ -1263,114 +1282,132 @@ const handleUploadCertificate = async (appId) => {
                       </div>
                     </td>
 
-                  
-
                     <td className="px-4 py-3 border space-y-2">
-  {(app.status === "Pending Confirmation" ||
-    app.status === "Submitted" ||
-    app.status === "In Review") && (
-    <>
-      {/* User ID input */}
-      <input
-        type="text"
-        placeholder="User ID"
-        value={selectedFiles[app._id]?.operatorId || ""}
-        onChange={(e) => handleInputChange(e, app._id, "operatorId")}
-        className="block w-full border px-2 py-1 text-sm rounded"
-      />
+                      {(app.status === "Pending Confirmation" ||
+                        app.status === "Submitted" ||
+                        app.status === "In Review") && (
+                        <>
+                          {/* User ID input */}
+                          <input
+                            type="text"
+                            placeholder="User ID"
+                            value={selectedFiles[app._id]?.operatorId || ""}
+                            onChange={(e) =>
+                              handleInputChange(e, app._id, "operatorId")
+                            }
+                            className="block w-full border px-2 py-1 text-sm rounded"
+                          />
 
-      {/* Password input */}
-      <input
-        type="password"
-        placeholder="Password"
-        value={selectedFiles[app._id]?.operatorPassword || ""}
-        onChange={(e) => handleInputChange(e, app._id, "operatorPassword")}
-        className="block w-full border px-2 py-1 text-sm rounded"
-      />
+                          {/* Password input */}
+                          <input
+                            type="password"
+                            placeholder="Password"
+                            value={
+                              selectedFiles[app._id]?.operatorPassword || ""
+                            }
+                            onChange={(e) =>
+                              handleInputChange(e, app._id, "operatorPassword")
+                            }
+                            className="block w-full border px-2 py-1 text-sm rounded"
+                          />
 
-      {/* File input */}
-      <input
-        type="file"
-        accept="application/pdf"
-        onChange={(e) => handleFileChange(e, app._id, "formPdf")}
-        className="block w-full text-sm text-gray-700"
-      />
+                          {/* File input */}
+                          <input
+                            type="file"
+                            accept="application/pdf"
+                            onChange={(e) =>
+                              handleFileChange(e, app._id, "formPdf")
+                            }
+                            className="block w-full text-sm text-gray-700"
+                          />
 
-      {/* Upload button */}
-      <button
-        onClick={() => handleUpload(app._id)}
-        className="px-3 py-1 bg-indigo-600 text-white rounded w-full text-sm"
-      >
-        Upload Form
-      </button>
-    </>
-  )}
+                          {/* Upload button */}
+                          <button
+                            onClick={() => handleUpload(app._id)}
+                            className="px-3 py-1 bg-indigo-600 text-white rounded w-full text-sm"
+                          >
+                            Upload Form
+                          </button>
+                        </>
+                      )}
 
-  {app.status === "Confirmed" && (
-    <>
-      <input
-        type="file"
-        accept="application/pdf"
-        onChange={(e) => handleFileChange(e, app._id, "certificate")}
-        className="block w-full text-sm text-gray-700"
-      />
-      <button
-        onClick={() => handleUploadCertificate(app._id)}
-        className="px-3 py-1 bg-green-600 text-white rounded w-full text-sm"
-      >
-        Upload Certificate
-      </button>
-    </>
-  )}
+                      {app.status === "Confirmed" && (
+                        <>
+                          <input
+                            type="file"
+                            accept="application/pdf"
+                            onChange={(e) =>
+                              handleFileChange(e, app._id, "certificate")
+                            }
+                            className="block w-full text-sm text-gray-700"
+                          />
+                          <button
+                            onClick={() => handleUploadCertificate(app._id)}
+                            className="px-3 py-1 bg-green-600 text-white rounded w-full text-sm"
+                          >
+                            Upload Certificate
+                          </button>
+                        </>
+                      )}
 
-  {app.status !== "Pending Confirmation" &&
-    app.status !== "Submitted" &&
-    app.status !== "Confirmed" &&
-    app.status !== "In Review" && (
-      <>
-        {app.status === "Completed" && app.certificate?.filename ? (
-          <span className="text-green-600 text-sm font-medium">
-            Certificate Uploaded
-          </span>
-        ) : (
-          <span className="text-gray-400 text-sm">N/A</span>
-        )}
-      </>
-    )}
-</td>
-
+                      {app.status !== "Pending Confirmation" &&
+                        app.status !== "Submitted" &&
+                        app.status !== "Confirmed" &&
+                        app.status !== "In Review" && (
+                          <>
+                            {app.status === "Completed" &&
+                            app.certificate?.filename ? (
+                              <span className="text-green-600 text-sm font-medium">
+                                Certificate Uploaded
+                              </span>
+                            ) : (
+                              <span className="text-gray-400 text-sm">N/A</span>
+                            )}
+                          </>
+                        )}
+                    </td>
 
                     <td className="px-4 py-3 border">
                       {app.correctionComment ? (
-                        <span className="text-red-500 text-sm">{app.correctionComment}</span>
+                        <span className="text-red-500 text-sm">
+                          {app.correctionComment}
+                        </span>
                       ) : (
-                        <span className="text-gray-400 text-sm">No corrections</span>
+                        <span className="text-gray-400 text-sm">
+                          No corrections
+                        </span>
                       )}
                     </td>
 
                     <td className="px-4 py-3 border text-center space-y-1">
-                      {app.status !== "Confirmed" && app.status !== "Rejected" && (
-                        <button
-                          onClick={() => handleReject(app._id)}
-                          className="px-3 py-1 bg-red-600 text-white rounded w-full text-sm"
-                        >
-                          Reject
-                        </button>
-                      )}
-                      {app.status !== "Completed" && app.status !== "Rejected" && (
-                        <button
-                          onClick={() => handleNextStatus(app._id, app.status)}
-                          className="px-3 py-1 bg-indigo-500 text-white rounded w-full text-sm"
-                        >
-                          Next
-                        </button>
-                      )}
+                      {app.status !== "Confirmed" &&
+                        app.status !== "Rejected" && (
+                          <button
+                            onClick={() => handleReject(app._id)}
+                            className="px-3 py-1 bg-red-600 text-white rounded w-full text-sm"
+                          >
+                            Reject
+                          </button>
+                        )}
+                      {app.status !== "Completed" &&
+                        app.status !== "Rejected" && (
+                          <button
+                            onClick={() =>
+                              handleNextStatus(app._id, app.status)
+                            }
+                            className="px-3 py-1 bg-indigo-500 text-white rounded w-full text-sm"
+                          >
+                            Next
+                          </button>
+                        )}
                     </td>
 
                     <td className="px-4 py-3 border text-center">
                       {app.user?.mobile ? (
                         <a
-                          href={`https://wa.me/91${app.user.mobile}?text=${encodeURIComponent(
+                          href={`https://wa.me/91${
+                            app.user.mobile
+                          }?text=${encodeURIComponent(
                             `Hello ${app.user.name}, regarding your application.`
                           )}`}
                           target="_blank"
@@ -1404,14 +1441,27 @@ const handleUploadCertificate = async (appId) => {
                 User Profile
               </h3>
               <div className="space-y-2 text-gray-700 text-sm">
-                <p><strong>Name:</strong> {selectedProfile.name}</p>
-                <p><strong>Gender:</strong> {selectedProfile.gender}</p>
-                <p><strong>DOB:</strong> {selectedProfile.dob ? new Date(selectedProfile.dob).toLocaleDateString() : "N/A"}</p>
-                <p><strong>Caste:</strong> {selectedProfile.caste}</p>
+                <p>
+                  <strong>Name:</strong> {selectedProfile.name}
+                </p>
+                <p>
+                  <strong>Gender:</strong> {selectedProfile.gender}
+                </p>
+                <p>
+                  <strong>DOB:</strong>{" "}
+                  {selectedProfile.dob
+                    ? new Date(selectedProfile.dob).toLocaleDateString()
+                    : "N/A"}
+                </p>
+                <p>
+                  <strong>Caste:</strong> {selectedProfile.caste}
+                </p>
               </div>
 
               <div className="mt-6">
-                <h4 className="text-lg font-semibold mb-2 text-indigo-600">Documents</h4>
+                <h4 className="text-lg font-semibold mb-2 text-indigo-600">
+                  Documents
+                </h4>
                 <div className="max-h-56 overflow-y-auto space-y-3">
                   {Object.entries(docLabels).map(([key, label]) => {
                     const file = selectedProfile[key];
@@ -1453,11 +1503,9 @@ const handleUploadCertificate = async (appId) => {
                   })}
                 </div>
               </div>
-
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
