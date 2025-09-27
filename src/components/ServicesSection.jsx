@@ -262,15 +262,21 @@ const ServicesSection = () => {
     const handleDeleted = ({ id }) => {
       setServices((prev) => prev.filter((s) => s._id !== id));
     };
+const handleCategoryCreated = (category) => setCategories(prev => [...prev, category]);
+  const handleCategoryDeleted = ({ id }) => setCategories(prev => prev.filter(c => c._id !== id));
 
     socket.on("services:created", handleCreated);
     socket.on("services:updated", handleUpdated);
     socket.on("services:deleted", handleDeleted);
+    socket.on("categories:created", handleCategoryCreated);
+  socket.on("categories:deleted", handleCategoryDeleted);
 
     return () => {
       socket.off("services:created", handleCreated);
       socket.off("services:updated", handleUpdated);
       socket.off("services:deleted", handleDeleted);
+      socket.off("categories:created", handleCategoryCreated);
+    socket.off("categories:deleted", handleCategoryDeleted);
     };
   }, []);
 
