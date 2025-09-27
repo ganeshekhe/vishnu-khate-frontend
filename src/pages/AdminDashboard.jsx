@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import { getSocket } from "../socket";
+
+
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 function AdminPanel() {
@@ -67,6 +70,34 @@ function AdminPanel() {
     statusFilter === "All"
       ? applications
       : applications.filter((app) => app.status === statusFilter);
+
+
+     
+
+useEffect(() => {
+  const socket = getSocket();
+  if (!socket) return;
+
+  const handleCreated = (service) => {
+    setServices(prev => [...prev, service]);
+  };
+  const handleUpdated = (service) => {
+    setServices(prev => prev.map(s => s._id === service._id ? service : s));
+  };
+  const handleDeleted = ({ id }) => {
+    setServices(prev => prev.filter(s => s._id !== id));
+  };
+
+  socket.on("services:created", handleCreated);
+  socket.on("services:updated", handleUpdated);
+  socket.on("services:deleted", handleDeleted);
+
+  return () => {
+    socket.off("services:created", handleCreated);
+    socket.off("services:updated", handleUpdated);
+    socket.off("services:deleted", handleDeleted);
+  };
+}, []);
 
   // ---------- initial fetch ----------
   useEffect(() => {
