@@ -74,30 +74,67 @@ function AdminPanel() {
 
      
 
+// useEffect(() => {
+//   const socket = getSocket();
+//   if (!socket) return;
+
+//   const handleCreated = (service) => {
+//     setServices(prev => [...prev, service]);
+//   };
+//   const handleUpdated = (service) => {
+//     setServices(prev => prev.map(s => s._id === service._id ? service : s));
+//   };
+//   const handleDeleted = ({ id }) => {
+//     setServices(prev => prev.filter(s => s._id !== id));
+//   };
+//   const handleCreated = (category) => setCategories(prev => [...prev, category]);
+//   const handleDeleted = ({ id }) => setCategories(prev => prev.filter(c => c._id !== id));
+
+//   socket.on("services:created", handleCreated);
+//   socket.on("services:updated", handleUpdated);
+//   socket.on("services:deleted", handleDeleted);
+//   socket.on("categories:created", handleCreated);
+//   socket.on("categories:deleted", handleDeleted);
+  
+
+
+//   return () => {
+//     socket.off("services:created", handleCreated);
+//     socket.off("services:updated", handleUpdated);
+//     socket.off("services:deleted", handleDeleted);
+//     socket.off("categories:created", handleCreated);
+//     socket.off("categories:deleted", handleDeleted);
+//   };
+// }, []);
 useEffect(() => {
   const socket = getSocket();
   if (!socket) return;
 
-  const handleCreated = (service) => {
-    setServices(prev => [...prev, service]);
-  };
-  const handleUpdated = (service) => {
-    setServices(prev => prev.map(s => s._id === service._id ? service : s));
-  };
-  const handleDeleted = ({ id }) => {
-    setServices(prev => prev.filter(s => s._id !== id));
-  };
+  // Services handlers
+  const handleServiceCreated = (service) => setServices(prev => [...prev, service]);
+  const handleServiceUpdated = (service) => setServices(prev => prev.map(s => s._id === service._id ? service : s));
+  const handleServiceDeleted = ({ id }) => setServices(prev => prev.filter(s => s._id !== id));
 
-  socket.on("services:created", handleCreated);
-  socket.on("services:updated", handleUpdated);
-  socket.on("services:deleted", handleDeleted);
+  // Categories handlers
+  const handleCategoryCreated = (category) => setCategories(prev => [...prev, category]);
+  const handleCategoryDeleted = ({ id }) => setCategories(prev => prev.filter(c => c._id !== id));
+
+  // Socket subscriptions
+  socket.on("services:created", handleServiceCreated);
+  socket.on("services:updated", handleServiceUpdated);
+  socket.on("services:deleted", handleServiceDeleted);
+  socket.on("categories:created", handleCategoryCreated);
+  socket.on("categories:deleted", handleCategoryDeleted);
 
   return () => {
-    socket.off("services:created", handleCreated);
-    socket.off("services:updated", handleUpdated);
-    socket.off("services:deleted", handleDeleted);
+    socket.off("services:created", handleServiceCreated);
+    socket.off("services:updated", handleServiceUpdated);
+    socket.off("services:deleted", handleServiceDeleted);
+    socket.off("categories:created", handleCategoryCreated);
+    socket.off("categories:deleted", handleCategoryDeleted);
   };
 }, []);
+
 
   // ---------- initial fetch ----------
   useEffect(() => {
@@ -136,6 +173,16 @@ useEffect(() => {
   },  [user?.token] ) ;
 
 
+const handleDeleteCategory = async (id) => {
+  if (!window.confirm("Delete this category?")) return;
+  try {
+    await axios.delete(`${BASE_URL}/api/categories/${id}`, { headers: authHeaders });
+    setCategories(prev => prev.filter(c => c._id !== id));
+  } catch (err) {
+    console.error("Failed to delete category", err);
+    alert("Failed to delete category");
+  }
+};
 
 
   const handleAddOrUpdateService = async () => {
@@ -684,7 +731,7 @@ const handleAddNotice = async () => {
     <h2 className="text-2xl font-bold mb-4">Admin Panel – Manage Services</h2>
 
     {/* Category Add */}
-    <div className="border p-4 rounded mb-4">
+    {/* <div className="border p-4 rounded mb-4">
       <h3 className="font-bold mb-2">Add Category</h3>
       <input
         type="text"
@@ -696,7 +743,34 @@ const handleAddNotice = async () => {
       <button onClick={handleAddCategory} className="bg-green-600 text-white px-4 py-2 rounded">
         Add Category
       </button>
-    </div>
+    </div> */}
+<div className="border p-4 rounded mb-4">
+  <h3 className="font-bold mb-2">Add Category</h3>
+  <input
+    type="text"
+    placeholder="Category name"
+    value={newCategory}
+    onChange={(e) => setNewCategory(e.target.value)}
+    className="border px-2 py-1 rounded w-full mb-2"
+  />
+  <button onClick={handleAddCategory} className="bg-green-600 text-white px-4 py-2 rounded">
+    Add Category
+  </button>
+
+  <ul className="mt-4 space-y-2">
+    {categories.map(cat => (
+      <li key={cat._id} className="flex justify-between items-center border px-2 py-1 rounded">
+        <span>{cat.name}</span>
+        <button
+          onClick={() => handleDeleteCategory(cat._id)}
+          className="bg-red-600 text-white px-2 py-1 rounded text-sm"
+        >
+          Delete
+        </button>
+      </li>
+    ))}
+  </ul>
+</div>
 
     {/* Service Add/Edit */}
     <div className="border p-4 rounded mb-4">
