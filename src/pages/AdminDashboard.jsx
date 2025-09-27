@@ -74,66 +74,62 @@ function AdminPanel() {
 
      
 
-// useEffect(() => {
-//   const socket = getSocket();
-//   if (!socket) return;
-
-//   const handleCreated = (service) => {
-//     setServices(prev => [...prev, service]);
-//   };
-//   const handleUpdated = (service) => {
-//     setServices(prev => prev.map(s => s._id === service._id ? service : s));
-//   };
-//   const handleDeleted = ({ id }) => {
-//     setServices(prev => prev.filter(s => s._id !== id));
-//   };
-//   const handleCreated = (category) => setCategories(prev => [...prev, category]);
-//   const handleDeleted = ({ id }) => setCategories(prev => prev.filter(c => c._id !== id));
-
-//   socket.on("services:created", handleCreated);
-//   socket.on("services:updated", handleUpdated);
-//   socket.on("services:deleted", handleDeleted);
-//   socket.on("categories:created", handleCreated);
-//   socket.on("categories:deleted", handleDeleted);
-  
-
-
-//   return () => {
-//     socket.off("services:created", handleCreated);
-//     socket.off("services:updated", handleUpdated);
-//     socket.off("services:deleted", handleDeleted);
-//     socket.off("categories:created", handleCreated);
-//     socket.off("categories:deleted", handleDeleted);
-//   };
-// }, []);
 useEffect(() => {
   const socket = getSocket();
   if (!socket) return;
 
-  // Services handlers
-  const handleServiceCreated = (service) => setServices(prev => [...prev, service]);
-  const handleServiceUpdated = (service) => setServices(prev => prev.map(s => s._id === service._id ? service : s));
-  const handleServiceDeleted = ({ id }) => setServices(prev => prev.filter(s => s._id !== id));
+  const handleCreated = (service) => {
+    setServices(prev => [...prev, service]);
+  };
+  const handleUpdated = (service) => {
+    setServices(prev => prev.map(s => s._id === service._id ? service : s));
+  };
+  const handleDeleted = ({ id }) => {
+    setServices(prev => prev.filter(s => s._id !== id));
+  };
+ 
 
-  // Categories handlers
-  const handleCategoryCreated = (category) => setCategories(prev => [...prev, category]);
-  const handleCategoryDeleted = ({ id }) => setCategories(prev => prev.filter(c => c._id !== id));
+  socket.on("services:created", handleCreated);
+  socket.on("services:updated", handleUpdated);
+  socket.on("services:deleted", handleDeleted);
+ 
 
-  // Socket subscriptions
-  socket.on("services:created", handleServiceCreated);
-  socket.on("services:updated", handleServiceUpdated);
-  socket.on("services:deleted", handleServiceDeleted);
-  socket.on("categories:created", handleCategoryCreated);
-  socket.on("categories:deleted", handleCategoryDeleted);
 
   return () => {
-    socket.off("services:created", handleServiceCreated);
-    socket.off("services:updated", handleServiceUpdated);
-    socket.off("services:deleted", handleServiceDeleted);
-    socket.off("categories:created", handleCategoryCreated);
-    socket.off("categories:deleted", handleCategoryDeleted);
+    socket.off("services:created", handleCreated);
+    socket.off("services:updated", handleUpdated);
+    socket.off("services:deleted", handleDeleted);
+    
   };
 }, []);
+// useEffect(() => {
+//   const socket = getSocket();
+//   if (!socket) return;
+
+//   // Services handlers
+//   const handleServiceCreated = (service) => setServices(prev => [...prev, service]);
+//   const handleServiceUpdated = (service) => setServices(prev => prev.map(s => s._id === service._id ? service : s));
+//   const handleServiceDeleted = ({ id }) => setServices(prev => prev.filter(s => s._id !== id));
+
+//   // Categories handlers
+//   const handleCategoryCreated = (category) => setCategories(prev => [...prev, category]);
+//   const handleCategoryDeleted = ({ id }) => setCategories(prev => prev.filter(c => c._id !== id));
+
+//   // Socket subscriptions
+//   socket.on("services:created", handleServiceCreated);
+//   socket.on("services:updated", handleServiceUpdated);
+//   socket.on("services:deleted", handleServiceDeleted);
+//   socket.on("categories:created", handleCategoryCreated);
+//   socket.on("categories:deleted", handleCategoryDeleted);
+
+//   return () => {
+//     socket.off("services:created", handleServiceCreated);
+//     socket.off("services:updated", handleServiceUpdated);
+//     socket.off("services:deleted", handleServiceDeleted);
+//     socket.off("categories:created", handleCategoryCreated);
+//     socket.off("categories:deleted", handleCategoryDeleted);
+//   };
+// }, []);
 
 
   // ---------- initial fetch ----------
