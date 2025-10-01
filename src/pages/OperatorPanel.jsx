@@ -401,36 +401,87 @@ const OperatorPanel = () => {
   //     alert("Failed to download all documents");
   //   }
   // };
-const handleDownloadAllDocs = async (userId) => {
+
+
+
+//   const handleDownloadAllDocs = async (userId) => {
+//   try {
+//     const res = await axios.get(
+//       `${BASE_URL}/api/applications/${userId}/download-all`,
+//       {
+//         responseType: "blob", // 👈 जरूरी आहे
+//         headers: { Authorization: `Bearer ${user.token}` },
+//       }
+//     );
+
+//     // Blob तयार करा आणि download trigger करा
+//     const blob = new Blob([res.data], { type: "application/zip" });
+//     const url = window.URL.createObjectURL(blob);
+//     const link = document.createElement("a");
+//     link.href = url;
+//     link.setAttribute(
+//       "download",
+//       `${userId}_documents.zip` // Operator PC वर filename
+//     );
+//     document.body.appendChild(link);
+//     link.click();
+//     link.remove();
+//     window.URL.revokeObjectURL(url);
+
+//     toast.success("All documents downloaded successfully!");
+//   } catch (err) {
+//     console.error("Download all docs failed:", err);
+//     toast.error("Failed to download all documents");
+//   }
+// };
+
+
+const handleDownloadAllDocs = async (userId, userName) => {
   try {
     const res = await axios.get(
       `${BASE_URL}/api/applications/${userId}/download-all`,
       {
-        responseType: "blob", // 👈 जरूरी आहे
+        responseType: "blob",
         headers: { Authorization: `Bearer ${user.token}` },
       }
     );
 
-    // Blob तयार करा आणि download trigger करा
     const blob = new Blob([res.data], { type: "application/zip" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute(
-      "download",
-      `${userId}_documents.zip` // Operator PC वर filename
-    );
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
+    const defaultFileName = `${userName.replace(/[^a-zA-Z0-9]/g, "_")}_documents.zip`;
 
-    toast.success("All documents downloaded successfully!");
+    // File System Access API वापरून save dialog
+    if (window.showSaveFilePicker) {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: defaultFileName,
+        types: [
+          {
+            description: "ZIP files",
+            accept: { "application/zip": [".zip"] },
+          },
+        ],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      toast.success("All documents downloaded successfully!");
+    } else {
+      // fallback
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", defaultFileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      toast.success("All documents downloaded (fallback)!");
+    }
   } catch (err) {
     console.error("Download all docs failed:", err);
     toast.error("Failed to download all documents");
   }
 };
+
 
   const filteredApps = applications.filter((app) => {
     const matchesStatus = statusFilter === "All" || app.status === statusFilter;
@@ -586,12 +637,19 @@ const handleDownloadAllDocs = async (userId) => {
                       >
                         Download All Docs
                       </button> */}
-                      <button
+                      {/* <button
   onClick={() => handleDownloadAllDocs(app.user?._id)}
   className="px-3 py-1 bg-green-600 text-white rounded text-sm w-full hover:bg-green-700 hover:shadow-lg hover:scale-105 transition transform duration-200 ease-in-out"
 >
   Download All Docs
+</button> */}
+<button
+  onClick={() => handleDownloadAllDocs(app.user?._id, app.user?.name)}
+  className="px-3 py-1 bg-green-600 text-white rounded text-sm w-full hover:bg-green-700 hover:shadow-lg hover:scale-105 transition transform duration-200 ease-in-out"
+>
+  Download All Docs
 </button>
+
 
                     </td>
 
