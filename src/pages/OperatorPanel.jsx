@@ -387,20 +387,50 @@ const OperatorPanel = () => {
     ),
   ];
 
-  const handleDownloadAllDocs = async (userId) => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}/api/applications/${userId}/download-all`,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      );
-      alert(res.data.message || "Documents downloaded successfully");
-    } catch (err) {
-      console.error("Download all docs failed:", err);
-      alert("Failed to download all documents");
-    }
-  };
+  // const handleDownloadAllDocs = async (userId) => {
+  //   try {
+  //     const res = await axios.get(
+  //       `${BASE_URL}/api/applications/${userId}/download-all`,
+  //       {
+  //         headers: { Authorization: `Bearer ${user.token}` },
+  //       }
+  //     );
+  //     alert(res.data.message || "Documents downloaded successfully");
+  //   } catch (err) {
+  //     console.error("Download all docs failed:", err);
+  //     alert("Failed to download all documents");
+  //   }
+  // };
+const handleDownloadAllDocs = async (userId) => {
+  try {
+    const res = await axios.get(
+      `${BASE_URL}/api/applications/${userId}/download-all`,
+      {
+        responseType: "blob", // 👈 जरूरी आहे
+        headers: { Authorization: `Bearer ${user.token}` },
+      }
+    );
+
+    // Blob तयार करा आणि download trigger करा
+    const blob = new Blob([res.data], { type: "application/zip" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `${userId}_documents.zip` // Operator PC वर filename
+    );
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+    toast.success("All documents downloaded successfully!");
+  } catch (err) {
+    console.error("Download all docs failed:", err);
+    toast.error("Failed to download all documents");
+  }
+};
 
   const filteredApps = applications.filter((app) => {
     const matchesStatus = statusFilter === "All" || app.status === statusFilter;
@@ -550,12 +580,19 @@ const OperatorPanel = () => {
                       >
                         View Profile
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => handleDownloadAllDocs(app.user?._id)}
                         className="px-3 py-1 bg-green-600 text-white rounded text-sm w-full hover:bg-green-700 hover:shadow-lg hover:scale-105 transition transform duration-200 ease-in-out"
                       >
                         Download All Docs
-                      </button>
+                      </button> */}
+                      <button
+  onClick={() => handleDownloadAllDocs(app.user?._id)}
+  className="px-3 py-1 bg-green-600 text-white rounded text-sm w-full hover:bg-green-700 hover:shadow-lg hover:scale-105 transition transform duration-200 ease-in-out"
+>
+  Download All Docs
+</button>
+
                     </td>
 
                     <td className="px-4 py-3 border">
