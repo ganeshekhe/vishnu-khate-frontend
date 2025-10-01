@@ -620,14 +620,9 @@ const handleDownloadAllDocs = async (userId, userName) => {
                       >
                         Download All Docs
                       </button> */}
-                      {/* <button
-  onClick={() => handleDownloadAllDocs(app.user?._id)}
-  className="px-3 py-1 bg-green-600 text-white rounded text-sm w-full hover:bg-green-700 hover:shadow-lg hover:scale-105 transition transform duration-200 ease-in-out"
->
-  Download All Docs
-</button> */}
+                      
 
-// Button click example
+
 <button
   onClick={() =>
     handleDownloadAllDocs(app.user?._id, app.user?.name)
